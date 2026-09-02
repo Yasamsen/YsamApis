@@ -1,43 +1,146 @@
 <!doctype html>
 <html lang="id">
+
 <head>
+
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#080b12">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#080b12"
+  >
+
   <title>Documentation — Yasam API</title>
-  <link rel="stylesheet" href="/styles.css">
+
+  <link
+    rel="stylesheet"
+    href="/styles.css"
+  >
+
 </head>
 
-<body>
+
+<body class="docs-page">
+
+
+<!-- ======================================================
+     NAVBAR
+     ====================================================== -->
 
 <header class="nav">
 
-  <a class="brand" href="/">
+  <a
+    class="brand"
+    href="/"
+  >
     <span>Y</span>
     Yasam <b>API</b>
   </a>
 
+
   <nav id="mainNav">
-    <a href="/">Home</a>
-    <a class="active" href="/docs">Documentation</a>
+
+    <a href="/">
+      Home
+    </a>
+
+    <a
+      class="active"
+      href="/docs"
+    >
+      Documentation
+    </a>
+
   </nav>
 
-  <button id="theme" class="theme-btn" type="button" aria-label="Toggle theme">
+
+  <button
+    id="theme"
+    class="theme-btn"
+    type="button"
+    aria-label="Toggle theme"
+  >
     ☾
   </button>
 
-  <button id="menuBtn" class="menu-btn" type="button" aria-label="Open menu">
+
+  <button
+    id="menuBtn"
+    class="menu-btn"
+    type="button"
+    aria-label="Open menu"
+    aria-expanded="false"
+  >
     ☰
   </button>
 
 </header>
 
 
-<div class="docs">
 
-  <aside id="docsAside">
+<!-- ======================================================
+     MOBILE API MENU
+     ====================================================== -->
 
-    <small>API REFERENCE</small>
+<div
+  id="mobileApiPanel"
+  class="mobile-api-panel"
+  hidden
+>
+
+  <div class="mobile-api-head">
+
+    <strong>
+      API REFERENCE
+    </strong>
+
+    <button
+      id="closeApiMenu"
+      type="button"
+      aria-label="Close API menu"
+    >
+      ✕
+    </button>
+
+  </div>
+
+
+  <input
+    id="mobileSearch"
+    type="search"
+    placeholder="Search API..."
+    autocomplete="off"
+  >
+
+
+  <div id="mobileSide">
+    Loading...
+  </div>
+
+</div>
+
+
+
+<!-- ======================================================
+     DOCUMENTATION LAYOUT
+     ====================================================== -->
+
+<div class="docs-layout">
+
+
+  <!-- DESKTOP SIDEBAR -->
+
+  <aside class="docs-sidebar">
+
+    <div class="sidebar-label">
+      API REFERENCE
+    </div>
+
 
     <input
       id="search"
@@ -47,6 +150,7 @@
       aria-label="Search endpoint"
     >
 
+
     <div id="side">
       Loading...
     </div>
@@ -54,42 +158,84 @@
   </aside>
 
 
-  <main>
 
-    <div class="doc-title">
+  <!-- MAIN -->
 
-      <div>
-        <small>DOCUMENTATION</small>
+  <main class="docs-main">
 
-        <h1>API Reference</h1>
+
+    <!-- MOBILE API BUTTON -->
+
+    <button
+      id="openApiMenu"
+      class="api-menu-button"
+      type="button"
+    >
+      <span>☰</span>
+      <span>API Menu</span>
+      <span class="api-menu-arrow">›</span>
+    </button>
+
+
+
+    <!-- DOCUMENTATION HEADER -->
+
+    <section class="doc-title">
+
+      <div class="doc-title-text">
+
+        <small>
+          DOCUMENTATION
+        </small>
+
+        <h1>
+          API Reference
+        </h1>
 
         <p>
-          Endpoint dan dokumentasi dibaca otomatis dari folder
-          <code>api/</code>.
+          Endpoint dan dokumentasi dibaca otomatis
+          dari folder <code>api/</code>.
         </p>
+
       </div>
 
-      <span class="pill">● ONLINE</span>
 
-    </div>
+      <span class="pill">
+        ● ONLINE
+      </span>
 
+    </section>
+
+
+
+    <!-- API DOCUMENTATION -->
 
     <div id="docs">
       Loading documentation...
     </div>
+
 
   </main>
 
 </div>
 
 
+
+<!-- ======================================================
+     FOOTER
+     ====================================================== -->
+
 <footer>
 
   <div class="wrap foot">
 
-    <b>Yasam API</b>
+    <b>
+      Yasam API
+    </b>
 
-    <span>Documentation</span>
+    <span>
+      Documentation
+    </span>
 
     <small>
       © <span id="year"></span>
@@ -100,49 +246,170 @@
 </footer>
 
 
+
 <script src="/script.js"></script>
 
+
+
+<!-- ======================================================
+     MOBILE MENU SCRIPT
+     ====================================================== -->
+
 <script>
-document.addEventListener("DOMContentLoaded", () => {
 
-  const menuBtn = document.getElementById("menuBtn");
-  const mainNav = document.getElementById("mainNav");
+(() => {
 
-  if (!menuBtn || !mainNav) return;
+  const menuBtn =
+    document.getElementById("menuBtn");
 
-  menuBtn.addEventListener("click", () => {
+  const mainNav =
+    document.getElementById("mainNav");
 
-    const opened = mainNav.classList.toggle("open");
+  const openApiMenu =
+    document.getElementById("openApiMenu");
 
-    menuBtn.textContent = opened ? "✕" : "☰";
+  const closeApiMenu =
+    document.getElementById("closeApiMenu");
 
-    menuBtn.setAttribute(
-      "aria-label",
-      opened ? "Close menu" : "Open menu"
+  const mobileApiPanel =
+    document.getElementById("mobileApiPanel");
+
+
+  /* NAVBAR MENU */
+
+  if (menuBtn && mainNav) {
+
+    menuBtn.addEventListener(
+      "click",
+      () => {
+
+        const opened =
+          mainNav.classList.toggle("open");
+
+        menuBtn.setAttribute(
+          "aria-expanded",
+          opened ? "true" : "false"
+        );
+
+        menuBtn.textContent =
+          opened ? "✕" : "☰";
+
+      }
     );
 
-  });
+
+    mainNav
+      .querySelectorAll("a")
+      .forEach(link => {
+
+        link.addEventListener(
+          "click",
+          () => {
+
+            mainNav.classList.remove("open");
+
+            menuBtn.textContent = "☰";
+
+            menuBtn.setAttribute(
+              "aria-expanded",
+              "false"
+            );
+
+          }
+        );
+
+      });
+
+  }
 
 
-  mainNav.querySelectorAll("a").forEach(link => {
 
-    link.addEventListener("click", () => {
+  /* API MENU */
 
-      mainNav.classList.remove("open");
+  function openPanel() {
 
-      menuBtn.textContent = "☰";
+    if (!mobileApiPanel) return;
 
-      menuBtn.setAttribute(
-        "aria-label",
-        "Open menu"
-      );
+    mobileApiPanel.hidden = false;
 
-    });
+    document.body.classList.add(
+      "api-panel-open"
+    );
 
-  });
+  }
 
-});
+
+  function closePanel() {
+
+    if (!mobileApiPanel) return;
+
+    mobileApiPanel.hidden = true;
+
+    document.body.classList.remove(
+      "api-panel-open"
+    );
+
+  }
+
+
+  if (openApiMenu) {
+
+    openApiMenu.addEventListener(
+      "click",
+      openPanel
+    );
+
+  }
+
+
+  if (closeApiMenu) {
+
+    closeApiMenu.addEventListener(
+      "click",
+      closePanel
+    );
+
+  }
+
+
+  /* Klik API */
+
+  if (mobileApiPanel) {
+
+    mobileApiPanel.addEventListener(
+      "click",
+      event => {
+
+        const link =
+          event.target.closest("a");
+
+        if (!link) return;
+
+        closePanel();
+
+      }
+    );
+
+  }
+
+
+  /* Escape */
+
+  document.addEventListener(
+    "keydown",
+    event => {
+
+      if (event.key === "Escape") {
+        closePanel();
+      }
+
+    }
+  );
+
+})();
+
 </script>
+
 
 </body>
 </html>
