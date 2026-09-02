@@ -14,6 +14,7 @@
   --g: #24d6a1;
 }
 
+
 :root[data-theme="light"] {
   --bg: #f7f8fc;
   --s: #ffffff;
@@ -24,6 +25,7 @@
 }
 
 
+
 /* =========================================================
    RESET
    ========================================================= */
@@ -32,17 +34,29 @@
   box-sizing: border-box;
 }
 
+
 html {
-  scroll-behavior: smooth;
   width: 100%;
   max-width: 100%;
+
+  margin: 0;
+  padding: 0;
+
   overflow-x: hidden;
+
+  scroll-behavior: smooth;
 }
 
+
 body {
-  margin: 0;
   width: 100%;
   max-width: 100%;
+
+  min-width: 0;
+
+  margin: 0;
+  padding: 0;
+
   overflow-x: hidden;
 
   background: var(--bg);
@@ -59,26 +73,41 @@ body {
   line-height: 1.6;
 }
 
+
+body *,
+body *::before,
+body *::after {
+  min-width: 0;
+}
+
+
 img,
 svg,
 video,
 canvas {
+  display: block;
+
   max-width: 100%;
 }
 
+
 a {
   color: inherit;
+
   text-decoration: none;
 }
+
 
 button,
 input {
   font: inherit;
 }
 
+
 button {
   cursor: pointer;
 }
+
 
 
 /* =========================================================
@@ -86,10 +115,17 @@ button {
    ========================================================= */
 
 .wrap {
-  width: min(1120px, calc(100% - 32px));
+  width: min(
+    1120px,
+    calc(100% - 32px)
+  );
+
   max-width: 100%;
-  margin: auto;
+
+  margin-left: auto;
+  margin-right: auto;
 }
+
 
 
 /* =========================================================
@@ -102,44 +138,64 @@ button {
 
   height: 70px;
 
-  border-bottom: 1px solid var(--b);
-
   display: flex;
   align-items: center;
 
   gap: 25px;
 
-  padding:
-    0
-    max(16px, calc((100% - 1120px) / 2));
+  padding-left:
+    max(
+      16px,
+      calc((100% - 1120px) / 2)
+    );
+
+  padding-right:
+    max(
+      16px,
+      calc((100% - 1120px) / 2)
+    );
+
+  border-bottom:
+    1px solid var(--b);
 
   position: sticky;
+
   top: 0;
 
-  background: rgba(8, 11, 18, .88);
+  background:
+    rgba(8, 11, 18, .88);
 
-  backdrop-filter: blur(14px);
+  backdrop-filter:
+    blur(14px);
 
-  z-index: 100;
+  z-index: 1000;
 }
+
 
 :root[data-theme="light"] .nav {
-  background: rgba(247, 248, 252, .9);
+  background:
+    rgba(247, 248, 252, .92);
 }
+
 
 .brand {
   display: flex;
+
   align-items: center;
+
+  min-width: 0;
+
+  margin-right: auto;
 
   font-weight: 800;
 
   white-space: nowrap;
-
-  margin-right: auto;
 }
+
 
 .brand span {
   display: inline-grid;
+
   place-items: center;
 
   width: 34px;
@@ -147,38 +203,48 @@ button {
 
   flex-shrink: 0;
 
+  margin-right: 7px;
+
   border-radius: 10px;
 
   background: var(--a);
-  color: #fff;
 
-  margin-right: 7px;
+  color: #fff;
 }
+
 
 .brand b {
   color: var(--a);
 }
 
+
 nav {
   display: flex;
+
   gap: 6px;
+
+  min-width: 0;
 }
+
 
 nav a {
   padding: 8px 11px;
 
-  color: var(--m);
-
   border-radius: 8px;
 
-  transition: .2s;
+  color: var(--m);
+
+  white-space: nowrap;
 }
+
 
 nav a.active,
 nav a:hover {
   background: var(--s2);
+
   color: var(--t);
 }
+
 
 .theme-btn,
 #theme {
@@ -187,13 +253,16 @@ nav a:hover {
 
   flex-shrink: 0;
 
-  border: 1px solid var(--b);
-
-  background: var(--s);
-  color: var(--t);
+  border:
+    1px solid var(--b);
 
   border-radius: 9px;
+
+  background: var(--s);
+
+  color: var(--t);
 }
+
 
 .menu-btn {
   display: none;
@@ -203,21 +272,24 @@ nav a:hover {
 
   flex-shrink: 0;
 
-  border: 1px solid var(--b);
+  place-items: center;
 
-  background: var(--s);
-  color: var(--t);
+  border:
+    1px solid var(--b);
 
   border-radius: 9px;
 
-  place-items: center;
+  background: var(--s);
+
+  color: var(--t);
 
   font-size: 20px;
 }
 
 
+
 /* =========================================================
-   HERO
+   HOME
    ========================================================= */
 
 .hero {
@@ -233,57 +305,63 @@ nav a:hover {
   align-items: center;
 }
 
+
 .pill {
   display: inline-block;
 
-  color: var(--g);
-
-  border: 1px solid var(--b);
-
-  background: var(--s);
-
   padding: 5px 10px;
+
+  border:
+    1px solid var(--b);
 
   border-radius: 99px;
 
+  background: var(--s);
+
+  color: var(--g);
+
   font-size: 11px;
+
   font-weight: 800;
 }
 
+
 .hero h1 {
-  font-size: clamp(45px, 7vw, 75px);
+  margin: 18px 0;
+
+  font-size:
+    clamp(45px, 7vw, 75px);
 
   line-height: 1.02;
 
   letter-spacing: -3px;
-
-  margin: 18px 0;
 }
+
 
 .hero h1 i {
-  font-style: normal;
   color: var(--a);
+
+  font-style: normal;
 }
+
 
 .hero p {
   color: var(--m);
+
   font-size: 17px;
 }
 
 
-/* =========================================================
-   BUTTONS
-   ========================================================= */
-
 .actions {
   display: flex;
+
+  flex-wrap: wrap;
 
   gap: 10px;
 
   margin-top: 25px;
-
-  flex-wrap: wrap;
 }
+
 
 .btn {
   display: inline-flex;
@@ -291,25 +369,31 @@ nav a:hover {
   align-items: center;
   justify-content: center;
 
-  border: 1px solid var(--b);
-
-  background: var(--s);
-  color: var(--t);
+  min-height: 40px;
 
   padding: 9px 14px;
 
+  border:
+    1px solid var(--b);
+
   border-radius: 9px;
 
-  font-weight: 700;
+  background: var(--s);
 
-  cursor: pointer;
+  color: var(--t);
+
+  font-weight: 700;
 }
+
 
 .btn.primary {
-  background: var(--a);
   border-color: var(--a);
+
+  background: var(--a);
+
   color: #fff;
 }
+
 
 
 /* =========================================================
@@ -317,24 +401,31 @@ nav a:hover {
    ========================================================= */
 
 .terminal {
+  max-width: 100%;
+
   overflow: hidden;
 
-  background: var(--s);
-
-  border: 1px solid var(--b);
+  border:
+    1px solid var(--b);
 
   border-radius: 15px;
 
-  box-shadow: 0 20px 60px #0005;
+  background: var(--s);
+
+  box-shadow:
+    0 20px 60px #0005;
 }
+
 
 .dots {
   padding: 13px;
 
-  border-bottom: 1px solid var(--b);
+  border-bottom:
+    1px solid var(--b);
 
   color: #555;
 }
+
 
 .dots span {
   float: right;
@@ -344,13 +435,19 @@ nav a:hover {
   font-size: 12px;
 }
 
+
 .terminal pre {
-  padding: 22px;
+  max-width: 100%;
 
   min-height: 220px;
 
+  margin: 0;
+
+  padding: 22px;
+
   overflow: auto;
 }
+
 
 
 /* =========================================================
@@ -368,15 +465,20 @@ nav a:hover {
   padding-bottom: 75px;
 }
 
-.stats > div {
-  background: var(--s);
 
-  border: 1px solid var(--b);
+.stats > div {
+  min-width: 0;
+
+  padding: 20px;
+
+  border:
+    1px solid var(--b);
 
   border-radius: 15px;
 
-  padding: 20px;
+  background: var(--s);
 }
+
 
 .stats strong {
   display: block;
@@ -384,9 +486,11 @@ nav a:hover {
   font-size: 29px;
 }
 
+
 .stats small {
   color: var(--m);
 }
+
 
 
 /* =========================================================
@@ -396,13 +500,14 @@ nav a:hover {
 .section-head {
   display: flex;
 
-  justify-content: space-between;
   align-items: end;
+  justify-content: space-between;
 
   gap: 15px;
 
   margin-bottom: 22px;
 }
+
 
 .section-head small,
 .doc-title small {
@@ -413,26 +518,32 @@ nav a:hover {
   letter-spacing: 1.4px;
 }
 
+
 .section-head h2 {
   margin: 5px 0;
 
   font-size: 33px;
 }
 
+
 .section-head input,
 aside input {
-  background: var(--s);
+  max-width: 100%;
 
-  border: 1px solid var(--b);
-
-  color: var(--t);
+  padding: 10px 12px;
 
   outline: none;
 
+  border:
+    1px solid var(--b);
+
   border-radius: 9px;
 
-  padding: 10px 12px;
+  background: var(--s);
+
+  color: var(--t);
 }
+
 
 
 /* =========================================================
@@ -450,25 +561,29 @@ aside input {
   padding-bottom: 90px;
 }
 
+
 .card {
   min-width: 0;
 
-  background: var(--s);
+  padding: 19px;
 
-  border: 1px solid var(--b);
+  overflow: hidden;
+
+  border:
+    1px solid var(--b);
 
   border-radius: 15px;
 
-  padding: 19px;
-
-  transition: .2s;
+  background: var(--s);
 }
+
 
 .card:hover {
-  transform: translateY(-3px);
-
   border-color: #6954cc;
+
+  transform: translateY(-3px);
 }
+
 
 .card h3 {
   margin: 17px 0 5px;
@@ -476,61 +591,70 @@ aside input {
   overflow-wrap: anywhere;
 }
 
-.card p {
-  color: var(--m);
 
+.card p {
   min-height: 50px;
+
+  color: var(--m);
 
   font-size: 14px;
 
   overflow-wrap: anywhere;
 }
 
+
 .card code {
   display: block;
 
+  width: 100%;
+
   max-width: 100%;
 
-  background: var(--s2);
-
   padding: 9px;
-
-  border-radius: 7px;
-
-  font-size: 12px;
 
   overflow-x: auto;
 
   white-space: nowrap;
+
+  border-radius: 7px;
+
+  background: var(--s2);
+
+  font-size: 12px;
 }
+
 
 .card > a {
   display: block;
 
-  color: var(--a);
+  margin-top: 14px;
 
-  font-weight: 700;
+  color: var(--a);
 
   font-size: 13px;
 
-  margin-top: 14px;
+  font-weight: 700;
 }
+
 
 .method {
   display: inline-block;
 
-  color: var(--g);
+  flex-shrink: 0;
 
-  background: #24d6a114;
+  padding: 3px 7px;
 
   border-radius: 6px;
 
-  padding: 3px 7px;
+  background: #24d6a114;
+
+  color: var(--g);
 
   font-size: 10px;
 
   font-weight: 900;
 }
+
 
 .copy {
   float: right;
@@ -541,26 +665,29 @@ aside input {
 
   color: var(--m);
 
-  cursor: pointer;
-
   font-size: 12px;
 }
 
+
 .empty {
+  grid-column: 1 / -1;
+
+  width: 100%;
+
   padding: 30px;
 
   text-align: center;
 
-  color: var(--m);
-
-  background: var(--s);
-
-  border: 1px solid var(--b);
+  border:
+    1px solid var(--b);
 
   border-radius: 12px;
 
-  grid-column: 1 / -1;
+  background: var(--s);
+
+  color: var(--m);
 }
+
 
 
 /* =========================================================
@@ -570,8 +697,10 @@ aside input {
 footer {
   width: 100%;
 
-  border-top: 1px solid var(--b);
+  border-top:
+    1px solid var(--b);
 }
+
 
 .foot {
   min-height: 85px;
@@ -583,9 +712,11 @@ footer {
   gap: 20px;
 }
 
+
 .foot b {
   margin-right: auto;
 }
+
 
 .foot span,
 .foot small,
@@ -596,29 +727,35 @@ footer {
 }
 
 
+
 /* =========================================================
-   DOCUMENTATION
+   DOCUMENTATION DESKTOP
    ========================================================= */
 
-.docs {
-  width: min(1260px, calc(100% - 32px));
+.docs-layout {
+  width: min(
+    1260px,
+    calc(100% - 32px)
+  );
 
   max-width: 100%;
 
-  margin: auto;
+  margin:
+    0 auto;
 
   display: grid;
 
   grid-template-columns:
-    250px minmax(0, 1fr);
+    240px minmax(0, 1fr);
 
   gap: 40px;
 }
 
-.docs aside {
-  min-width: 0;
 
-  max-width: 100%;
+.docs-sidebar {
+  width: 100%;
+
+  min-width: 0;
 
   padding-top: 28px;
 
@@ -626,14 +763,18 @@ footer {
 
   top: 85px;
 
-  height: calc(100vh - 100px);
+  align-self: start;
 
-  overflow-y: auto;
+  height:
+    calc(100vh - 100px);
 
   overflow-x: hidden;
+
+  overflow-y: auto;
 }
 
-.docs aside > small {
+
+.sidebar-label {
   color: var(--m);
 
   font-size: 11px;
@@ -641,17 +782,24 @@ footer {
   font-weight: 800;
 }
 
-.docs aside input {
+
+.docs-sidebar input {
   display: block;
 
   width: 100%;
 
-  max-width: 100%;
-
   margin: 12px 0;
 }
 
-.docs aside a {
+
+#side {
+  width: 100%;
+
+  min-width: 0;
+}
+
+
+#side a {
   display: flex;
 
   align-items: center;
@@ -669,9 +817,11 @@ footer {
   font-size: 13px;
 }
 
-.docs aside a:hover {
+
+#side a:hover {
   background: var(--s);
 }
+
 
 .side-name {
   min-width: 0;
@@ -683,37 +833,52 @@ footer {
   white-space: nowrap;
 }
 
+
 .side-empty {
   padding: 8px;
+
+  color: var(--m);
+
+  font-size: 13px;
 }
+
 
 .mini {
-  flex-shrink: 0;
+  padding: 2px 5px;
 
   font-size: 8px;
-
-  padding: 2px 5px;
 }
 
-.docs main {
+
+
+/* =========================================================
+   MAIN DOCS
+   ========================================================= */
+
+.docs-main {
+  width: 100%;
+
   min-width: 0;
 
   max-width: 100%;
 
-  padding: 55px 0 90px;
+  padding:
+    55px 0 90px;
+
+  overflow: hidden;
 }
 
 
-/* =========================================================
-   DOC TITLE
-   ========================================================= */
-
 .doc-title {
+  width: 100%;
+
   min-width: 0;
 
   max-width: 100%;
 
   display: flex;
+
+  align-items: flex-start;
 
   justify-content: space-between;
 
@@ -722,31 +887,95 @@ footer {
   margin-bottom: 28px;
 }
 
+
+.doc-title-text {
+  min-width: 0;
+
+  max-width: 100%;
+}
+
+
 .doc-title h1 {
+  margin: 7px 0;
+
   font-size: 50px;
+
+  line-height: 1.05;
 
   letter-spacing: -2px;
 
-  margin: 7px 0;
-
   overflow-wrap: anywhere;
 }
 
-.doc-title p,
-.doc p,
-.muted {
-  color: var(--m);
-}
 
 .doc-title p {
+  margin: 0;
+
+  color: var(--m);
+
   overflow-wrap: anywhere;
 }
+
 
 .doc-title .pill {
   flex-shrink: 0;
-
-  align-self: flex-start;
 }
+
+
+
+/* =========================================================
+   MOBILE API BUTTON
+   ========================================================= */
+
+.api-menu-button {
+  display: none;
+
+  width: 100%;
+
+  min-height: 46px;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 18px;
+
+  padding: 10px 13px;
+
+  border:
+    1px solid var(--b);
+
+  border-radius: 10px;
+
+  background: var(--s);
+
+  color: var(--t);
+
+  text-align: left;
+}
+
+
+.api-menu-button span:nth-child(2) {
+  flex: 1;
+}
+
+
+.api-menu-arrow {
+  font-size: 22px;
+
+  color: var(--m);
+}
+
+
+
+/* =========================================================
+   MOBILE API PANEL
+   ========================================================= */
+
+.mobile-api-panel {
+  display: none;
+}
+
 
 
 /* =========================================================
@@ -756,44 +985,56 @@ footer {
 .doc {
   width: 100%;
 
-  max-width: 100%;
-
   min-width: 0;
 
-  background: var(--s);
-
-  border: 1px solid var(--b);
-
-  border-radius: 15px;
-
-  padding: 27px;
+  max-width: 100%;
 
   margin-bottom: 18px;
 
-  scroll-margin-top: 90px;
+  padding: 27px;
 
   overflow: hidden;
+
+  border:
+    1px solid var(--b);
+
+  border-radius: 15px;
+
+  background: var(--s);
+
+  scroll-margin-top: 90px;
 }
 
+
 .dochead {
+  width: 100%;
+
   min-width: 0;
 
   max-width: 100%;
 
   display: flex;
 
+  align-items: flex-start;
+
   justify-content: space-between;
 
   gap: 20px;
 }
 
+
 .doc-info {
+  width: 100%;
+
   min-width: 0;
 
   max-width: 100%;
 }
 
+
 .endpoint-line {
+  width: 100%;
+
   min-width: 0;
 
   max-width: 100%;
@@ -803,17 +1044,34 @@ footer {
   align-items: center;
 
   gap: 7px;
+
+  overflow: hidden;
 }
 
-.endpoint-line code {
+
+.endpoint-scroll {
   min-width: 0;
 
   max-width: 100%;
 
+  flex: 1;
+
   overflow-x: auto;
 
-  white-space: nowrap;
+  overflow-y: hidden;
+
+  scrollbar-width: thin;
 }
+
+
+.endpoint-scroll code {
+  display: inline-block;
+
+  white-space: nowrap;
+
+  font-size: 13px;
+}
+
 
 .dochead h2 {
   margin: 10px 0 4px;
@@ -821,9 +1079,17 @@ footer {
   overflow-wrap: anywhere;
 }
 
+
 .dochead p {
+  margin: 0;
+
+  color: var(--m);
+
   overflow-wrap: anywhere;
+
+  word-break: break-word;
 }
+
 
 .doc-actions {
   flex-shrink: 0;
@@ -831,34 +1097,42 @@ footer {
   display: flex;
 
   gap: 8px;
-
-  align-items: flex-start;
 }
 
-.dochead .btn {
-  font-size: 12px;
-}
 
 
 /* =========================================================
    PARAMETERS
    ========================================================= */
 
-.params {
+.params-wrap {
   width: 100%;
 
   max-width: 100%;
-
-  border: 1px solid var(--b);
-
-  border-radius: 9px;
 
   overflow-x: auto;
 
   overflow-y: hidden;
 
   -webkit-overflow-scrolling: touch;
+
+  border-radius: 9px;
 }
+
+
+.params {
+  width: 100%;
+
+  min-width: 580px;
+
+  border:
+    1px solid var(--b);
+
+  border-radius: 9px;
+
+  overflow: hidden;
+}
+
 
 .prow {
   display: grid;
@@ -870,16 +1144,17 @@ footer {
 
   padding: 10px 12px;
 
-  border-top: 1px solid var(--b);
+  border-top:
+    1px solid var(--b);
 
   font-size: 13px;
-
-  min-width: 580px;
 }
+
 
 .prow:first-child {
   border-top: 0;
 }
+
 
 .prow.head {
   background: var(--s2);
@@ -894,51 +1169,64 @@ footer {
 }
 
 
+
 /* =========================================================
    EXAMPLES
    ========================================================= */
 
 .examples {
-  display: grid;
-
-  grid-template-columns:
-    1fr 1fr;
-
-  gap: 14px;
-
   width: 100%;
 
   max-width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 14px;
 }
 
-.examples > div {
+
+.example-box {
+  width: 100%;
+
   min-width: 0;
 
   max-width: 100%;
+
+  overflow: hidden;
 }
+
 
 .examples h3,
 .doc > h3 {
   font-size: 13px;
 }
 
+
 .examples pre,
 .trybox pre {
   width: 100%;
 
+  min-width: 0;
+
   max-width: 100%;
 
-  background: var(--s2);
-
-  border: 1px solid var(--b);
+  margin: 0;
 
   padding: 15px;
-
-  border-radius: 9px;
 
   overflow-x: auto;
 
   overflow-y: auto;
+
+  border:
+    1px solid var(--b);
+
+  border-radius: 9px;
+
+  background: var(--s2);
 
   font-size: 12px;
 
@@ -950,6 +1238,7 @@ footer {
 }
 
 
+
 /* =========================================================
    TRY API
    ========================================================= */
@@ -959,52 +1248,63 @@ footer {
 
   max-width: 100%;
 
-  background: var(--s2);
+  margin-top: 15px;
 
   padding: 14px;
 
+  overflow: hidden;
+
   border-radius: 9px;
 
-  overflow: hidden;
+  background: var(--s2);
 }
+
 
 .tryrow {
-  display: flex;
-
-  gap: 8px;
-
   width: 100%;
-
-  max-width: 100%;
-}
-
-.tryrow input {
-  flex: 1;
 
   min-width: 0;
 
   max-width: 100%;
 
-  background: var(--s);
+  display: flex;
 
-  border: 1px solid var(--b);
+  gap: 8px;
+}
 
-  color: var(--t);
+
+.tryrow input {
+  flex: 1;
+
+  width: 100%;
+
+  min-width: 0;
+
+  max-width: 100%;
 
   padding: 9px;
 
+  outline: none;
+
+  border:
+    1px solid var(--b);
+
   border-radius: 8px;
 
-  outline: 0;
+  background: var(--s);
+
+  color: var(--t);
 }
+
 
 .tryrow button {
   flex-shrink: 0;
 }
 
 
+
 /* =========================================================
-   ERROR PAGE
+   ERROR
    ========================================================= */
 
 .error {
@@ -1014,34 +1314,42 @@ footer {
 
   place-items: center;
 
-  text-align: center;
-
   padding: 25px;
+
+  text-align: center;
 }
 
+
 .error main {
+  width: 100%;
+
   max-width: 650px;
 }
 
+
 .code404 {
-  font-size: clamp(100px, 20vw, 180px);
+  color: var(--a);
+
+  font-size:
+    clamp(100px, 20vw, 180px);
 
   font-weight: 900;
 
   line-height: .8;
 
-  color: var(--a);
-
   letter-spacing: -10px;
 }
+
 
 .error h1 {
   font-size: 38px;
 }
 
+
 .error p {
   color: var(--m);
 }
+
 
 
 /* =========================================================
@@ -1056,74 +1364,81 @@ footer {
     gap: 30px;
   }
 
+
   .grid {
     grid-template-columns:
-      repeat(2, 1fr);
+      repeat(2, minmax(0, 1fr));
   }
 
-  .docs {
+
+  .docs-layout {
     width: calc(100% - 28px);
 
-    grid-template-columns: 1fr;
+    grid-template-columns:
+      210px minmax(0, 1fr);
 
-    gap: 0;
+    gap: 25px;
   }
 
-  .docs aside {
-    position: static;
 
-    width: 100%;
-
-    height: auto;
-
-    padding-top: 20px;
+  .doc {
+    padding: 22px;
   }
 
-  .docs main {
-    width: 100%;
 
-    padding-top: 25px;
+  .doc-title h1 {
+    font-size: 42px;
   }
 
 }
+
 
 
 /* =========================================================
    MOBILE
    ========================================================= */
 
-@media (max-width: 620px) {
+@media (max-width: 680px) {
 
-  /* ---------- GLOBAL ---------- */
+
+  /* -------------------------------------------------------
+     GLOBAL
+     ------------------------------------------------------- */
 
   html,
   body {
-    width: 100%;
-    max-width: 100%;
+    width: 100% !important;
 
-    overflow-x: hidden;
+    max-width: 100% !important;
+
+    min-width: 0 !important;
+
+    overflow-x: hidden !important;
   }
 
 
-  /* ---------- NAV ---------- */
+  /* -------------------------------------------------------
+     NAV
+     ------------------------------------------------------- */
 
   .nav {
-    height: 62px;
-
     width: 100%;
 
-    padding: 0 12px;
+    height: 62px;
+
+    padding:
+      0 10px;
 
     gap: 7px;
   }
 
+
   .brand {
     min-width: 0;
 
-    margin-right: auto;
-
     font-size: 14px;
   }
+
 
   .brand span {
     width: 31px;
@@ -1132,23 +1447,30 @@ footer {
     margin-right: 4px;
   }
 
+
   .nav nav {
     display: none;
   }
 
+
   .theme-btn,
-  #theme,
-  .menu-btn {
-    width: 36px;
-    height: 36px;
+  #theme {
+    width: 35px;
+    height: 35px;
   }
+
 
   .menu-btn {
     display: inline-grid;
+
+    width: 35px;
+    height: 35px;
   }
 
 
-  /* ---------- MOBILE NAV OPEN ---------- */
+  /* -------------------------------------------------------
+     NAV OPEN
+     ------------------------------------------------------- */
 
   .nav nav.open {
     display: flex;
@@ -1157,12 +1479,12 @@ footer {
 
     top: 62px;
 
-    left: 10px;
-    right: 10px;
+    left: 8px;
+    right: 8px;
 
     width: auto;
 
-    max-width: calc(100% - 20px);
+    max-width: none;
 
     padding: 8px;
 
@@ -1170,14 +1492,17 @@ footer {
 
     gap: 3px;
 
-    background: var(--s);
-
-    border: 1px solid var(--b);
+    border:
+      1px solid var(--b);
 
     border-radius: 12px;
 
-    box-shadow: 0 15px 40px #0005;
+    background: var(--s);
+
+    box-shadow:
+      0 15px 40px #0005;
   }
+
 
   .nav nav.open a {
     width: 100%;
@@ -1186,71 +1511,204 @@ footer {
   }
 
 
-  /* ---------- DOCS ---------- */
 
-  .docs {
-    display: block;
+  /* -------------------------------------------------------
+     DOCS LAYOUT
+     ------------------------------------------------------- */
 
-    width: calc(100% - 24px);
-
-    max-width: calc(100% - 24px);
-
-    margin: 0 auto;
-  }
-
-  .docs aside {
+  .docs-layout {
     display: block;
 
     width: 100%;
 
     max-width: 100%;
 
-    height: auto;
+    margin: 0;
 
-    padding-top: 18px;
-
-    overflow: visible;
+    padding:
+      0 12px;
   }
 
-  .docs aside input {
+
+  /* -------------------------------------------------------
+     HIDE DESKTOP SIDEBAR
+     ------------------------------------------------------- */
+
+  .docs-sidebar {
+    display: none;
+  }
+
+
+  /* -------------------------------------------------------
+     MAIN
+     ------------------------------------------------------- */
+
+  .docs-main {
     display: block;
 
     width: 100%;
 
     max-width: 100%;
 
-    min-width: 0;
+    padding:
+      14px 0 55px;
+
+    overflow: hidden;
   }
 
-  #side {
-    width: 100%;
 
-    max-width: 100%;
+  /* -------------------------------------------------------
+     API MENU BUTTON
+     ------------------------------------------------------- */
+
+  .api-menu-button {
+    display: flex;
+  }
+
+
+  /* -------------------------------------------------------
+     API MOBILE PANEL
+     ------------------------------------------------------- */
+
+  .mobile-api-panel {
+    display: block;
+
+    position: fixed;
+
+    top: 62px;
+
+    left: 8px;
+    right: 8px;
+
+    width: auto;
+
+    max-width: none;
+
+    max-height:
+      calc(100vh - 74px);
+
+    padding: 12px;
+
+    overflow-y: auto;
 
     overflow-x: hidden;
+
+    border:
+      1px solid var(--b);
+
+    border-radius: 14px;
+
+    background: var(--s);
+
+    box-shadow:
+      0 20px 60px #0007;
+
+    z-index: 2000;
   }
 
-  #side a {
+
+  .mobile-api-panel[hidden] {
+    display: none;
+  }
+
+
+  .mobile-api-head {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 10px;
+  }
+
+
+  .mobile-api-head strong {
+    color: var(--m);
+
+    font-size: 11px;
+
+    letter-spacing: 1px;
+  }
+
+
+  .mobile-api-head button {
+    width: 34px;
+    height: 34px;
+
+    border:
+      1px solid var(--b);
+
+    border-radius: 8px;
+
+    background: var(--s2);
+
+    color: var(--t);
+  }
+
+
+  .mobile-api-panel input {
+    display: block;
+
     width: 100%;
 
-    max-width: 100%;
+    height: 42px;
+
+    margin-bottom: 10px;
+
+    padding:
+      8px 11px;
+
+    outline: none;
+
+    border:
+      1px solid var(--b);
+
+    border-radius: 9px;
+
+    background: var(--s2);
+
+    color: var(--t);
+  }
+
+
+  #mobileSide {
+    width: 100%;
 
     min-width: 0;
+
+    overflow: hidden;
   }
 
 
-  /* ---------- DOC MAIN ---------- */
+  #mobileSide a {
+    display: flex;
 
-  .docs main {
+    align-items: center;
+
+    gap: 8px;
+
     width: 100%;
 
-    max-width: 100%;
+    min-width: 0;
 
-    padding: 22px 0 60px;
+    padding: 10px;
+
+    border-radius: 8px;
   }
 
 
-  /* ---------- DOC TITLE ---------- */
+  #mobileSide a:hover {
+    background: var(--s2);
+  }
+
+
+
+  /* -------------------------------------------------------
+     TITLE
+     ------------------------------------------------------- */
 
   .doc-title {
     width: 100%;
@@ -1261,38 +1719,53 @@ footer {
 
     flex-direction: column;
 
-    align-items: stretch;
-
     gap: 10px;
 
     margin-bottom: 20px;
   }
 
+
   .doc-title h1 {
-    font-size: 38px;
+    margin:
+      6px 0 8px;
+
+    font-size: 36px;
 
     line-height: 1.05;
 
     letter-spacing: -1.5px;
   }
 
+
   .doc-title p {
+    width: 100%;
+
+    max-width: 100%;
+
     font-size: 14px;
+
+    overflow-wrap: anywhere;
+
+    word-break: break-word;
   }
+
 
   .doc-title .pill {
     align-self: flex-start;
   }
 
 
-  /* ---------- DOC ---------- */
+
+  /* -------------------------------------------------------
+     DOC
+     ------------------------------------------------------- */
 
   .doc {
     width: 100%;
 
     max-width: 100%;
 
-    padding: 16px;
+    padding: 15px;
 
     margin-bottom: 14px;
 
@@ -1300,7 +1773,9 @@ footer {
   }
 
 
-  /* ---------- DOC HEADER ---------- */
+  /* -------------------------------------------------------
+     DOC HEADER
+     ------------------------------------------------------- */
 
   .dochead {
     width: 100%;
@@ -1311,47 +1786,52 @@ footer {
 
     flex-direction: column;
 
-    gap: 14px;
+    gap: 13px;
   }
 
-  .dochead > div {
-    min-width: 0;
+
+  .doc-info {
+    width: 100%;
 
     max-width: 100%;
   }
 
-  .dochead h2 {
-    font-size: 21px;
-
-    overflow-wrap: anywhere;
-  }
-
-  .dochead p {
-    font-size: 14px;
-  }
 
   .endpoint-line {
     width: 100%;
 
     max-width: 100%;
-
-    min-width: 0;
-
-    overflow: hidden;
-  }
-
-  .endpoint-line code {
-    min-width: 0;
-
-    max-width: 100%;
-
-    overflow-x: auto;
-
-    white-space: nowrap;
   }
 
 
-  /* ---------- BUTTONS ---------- */
+  .endpoint-scroll {
+    max-width: calc(
+      100% - 60px
+    );
+  }
+
+
+  .endpoint-scroll code {
+    font-size: 12px;
+  }
+
+
+  .dochead h2 {
+    font-size: 21px;
+
+    line-height: 1.25;
+  }
+
+
+  .dochead p {
+    font-size: 14px;
+  }
+
+
+
+  /* -------------------------------------------------------
+     ACTIONS
+     ------------------------------------------------------- */
 
   .doc-actions {
     width: 100%;
@@ -1359,74 +1839,59 @@ footer {
     display: grid;
 
     grid-template-columns:
-      1fr 1fr;
+      repeat(2, minmax(0, 1fr));
 
     gap: 8px;
   }
 
+
   .doc-actions .btn {
     width: 100%;
 
-    margin: 0;
+    min-width: 0;
   }
 
 
-  /* ---------- PARAMETERS ---------- */
 
-  .params {
+  /* -------------------------------------------------------
+     PARAMETER TABLE
+     ------------------------------------------------------- */
+
+  .params-wrap {
     width: 100%;
 
     max-width: 100%;
 
     overflow-x: auto;
 
-    -webkit-overflow-scrolling: touch;
+    overflow-y: hidden;
+
+    border-radius: 9px;
   }
 
-  .prow {
+
+  .params {
     min-width: 580px;
   }
 
 
-  /* ---------- EXAMPLES ---------- */
+
+  /* -------------------------------------------------------
+     EXAMPLES
+     ------------------------------------------------------- */
 
   .examples {
-    display: grid;
+    width: 100%;
+
+    max-width: 100%;
 
     grid-template-columns: 1fr;
 
     gap: 12px;
-
-    width: 100%;
-
-    max-width: 100%;
-  }
-
-  .examples > div {
-    min-width: 0;
-
-    max-width: 100%;
-  }
-
-  .examples pre,
-  .trybox pre {
-    width: 100%;
-
-    max-width: 100%;
-
-    overflow-x: auto;
-
-    white-space: pre-wrap;
-
-    overflow-wrap: anywhere;
-
-    word-break: break-word;
   }
 
 
-  /* ---------- TRY ---------- */
-
-  .trybox {
+  .example-box {
     width: 100%;
 
     max-width: 100%;
@@ -1434,17 +1899,55 @@ footer {
     overflow: hidden;
   }
 
+
+  .examples pre,
+  .trybox pre {
+    width: 100%;
+
+    max-width: 100%;
+
+    white-space: pre-wrap;
+
+    overflow-wrap: anywhere;
+
+    word-break: break-word;
+
+    overflow-x: auto;
+  }
+
+
+
+  /* -------------------------------------------------------
+     TRY
+     ------------------------------------------------------- */
+
+  .trybox {
+    width: 100%;
+
+    max-width: 100%;
+
+    padding: 11px;
+  }
+
+
   .tryrow {
+    width: 100%;
+
     display: flex;
 
     flex-direction: column;
 
+    gap: 8px;
+  }
+
+
+  .tryrow input {
     width: 100%;
 
     max-width: 100%;
   }
 
-  .tryrow input,
+
   .tryrow button {
     width: 100%;
 
@@ -1452,59 +1955,20 @@ footer {
   }
 
 
-  /* ---------- HOME ---------- */
 
-  .hero {
-    grid-template-columns: 1fr;
-
-    gap: 25px;
-  }
-
-  .hero h1 {
-    font-size: 48px;
-
-    letter-spacing: -2px;
-  }
-
-  .stats {
-    grid-template-columns: 1fr;
-
-    padding-bottom: 50px;
-  }
-
-  .grid {
-    grid-template-columns: 1fr;
-
-    gap: 12px;
-  }
-
-  .section-head {
-    flex-direction: column;
-
-    align-items: stretch;
-  }
-
-  .section-head input {
-    width: 100%;
-  }
-
-
-  /* ---------- FOOTER ---------- */
-
-  footer {
-    width: 100%;
-
-    max-width: 100%;
-  }
+  /* -------------------------------------------------------
+     FOOTER
+     ------------------------------------------------------- */
 
   .foot {
     width: calc(100% - 24px);
 
-    max-width: calc(100% - 24px);
+    max-width: 100%;
 
     min-height: 75px;
 
-    padding: 15px 0;
+    padding:
+      15px 0;
 
     display: flex;
 
@@ -1512,6 +1976,7 @@ footer {
 
     gap: 8px 14px;
   }
+
 
   .foot b {
     width: 100%;
@@ -1522,51 +1987,66 @@ footer {
 }
 
 
+
 /* =========================================================
-   VERY SMALL PHONE
+   SMALL PHONE
    ========================================================= */
 
 @media (max-width: 380px) {
 
   .nav {
-    padding: 0 9px;
+    padding:
+      0 8px;
   }
+
 
   .brand {
     font-size: 13px;
   }
 
+
+  .brand span {
+    width: 29px;
+    height: 29px;
+  }
+
+
   .theme-btn,
   #theme,
   .menu-btn {
-    width: 34px;
-    height: 34px;
+    width: 33px;
+    height: 33px;
   }
 
-  .docs {
-    width: calc(100% - 18px);
 
-    max-width: calc(100% - 18px);
+  .docs-layout {
+    padding:
+      0 9px;
   }
 
-  .doc {
-    padding: 13px;
-  }
 
   .doc-title h1 {
     font-size: 32px;
   }
 
+
+  .doc {
+    padding: 13px;
+  }
+
+
+  .doc-actions {
+    grid-template-columns: 1fr;
+  }
+
+
   .method {
     font-size: 9px;
   }
 
-  .endpoint-line code {
-    font-size: 11px;
-  }
 
-  .doc-actions {
-    grid-template-columns: 1fr;
+  .endpoint-scroll code {
+    font-size: 11px;
   }
 
 }
