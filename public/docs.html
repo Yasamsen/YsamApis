@@ -1,415 +1,101 @@
 <!doctype html>
 <html lang="id">
-
 <head>
-
   <meta charset="utf-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <meta
-    name="theme-color"
-    content="#080b12"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Documentation — Yasam API</title>
-
-  <link
-    rel="stylesheet"
-    href="/styles.css"
-  >
-
+  <link rel="stylesheet" href="/styles.css">
 </head>
 
+<body>
 
-<body class="docs-page">
+  <header class="nav">
 
-
-<!-- ======================================================
-     NAVBAR
-     ====================================================== -->
-
-<header class="nav">
-
-  <a
-    class="brand"
-    href="/"
-  >
-    <span>Y</span>
-    Yasam <b>API</b>
-  </a>
-
-
-  <nav id="mainNav">
-
-    <a href="/">
-      Home
+    <a class="brand" href="/">
+      <span>Y</span> Yasam <b>API</b>
     </a>
 
-    <a
-      class="active"
-      href="/docs"
-    >
-      Documentation
-    </a>
+    <nav>
+      <a href="/">Home</a>
+      <a class="active" href="/docs">Documentation</a>
+    </nav>
 
-  </nav>
+    <button id="theme" aria-label="Toggle theme">☾</button>
 
-
-  <button
-    id="theme"
-    class="theme-btn"
-    type="button"
-    aria-label="Toggle theme"
-  >
-    ☾
-  </button>
+  </header>
 
 
-  <button
-    id="menuBtn"
-    class="menu-btn"
-    type="button"
-    aria-label="Open menu"
-    aria-expanded="false"
-  >
-    ☰
-  </button>
+  <div class="docs">
 
-</header>
+    <aside>
 
+      <small>API REFERENCE</small>
 
+      <input
+        id="search"
+        type="search"
+        placeholder="Search endpoint..."
+        autocomplete="off"
+      >
 
-<!-- ======================================================
-     MOBILE API MENU
-     ====================================================== -->
+      <div id="side">
+        Loading...
+      </div>
 
-<div
-  id="mobileApiPanel"
-  class="mobile-api-panel"
-  hidden
->
-
-  <div class="mobile-api-head">
-
-    <strong>
-      API REFERENCE
-    </strong>
-
-    <button
-      id="closeApiMenu"
-      type="button"
-      aria-label="Close API menu"
-    >
-      ✕
-    </button>
-
-  </div>
+    </aside>
 
 
-  <input
-    id="mobileSearch"
-    type="search"
-    placeholder="Search API..."
-    autocomplete="off"
-  >
+    <main>
 
+      <div class="doc-title">
 
-  <div id="mobileSide">
-    Loading...
-  </div>
+        <div>
 
-</div>
+          <small>DOCUMENTATION</small>
 
+          <h1>API Reference</h1>
 
+          <p>
+            Endpoint dan dokumentasi dibaca otomatis dari folder
+            <code>api/</code>.
+          </p>
 
-<!-- ======================================================
-     DOCUMENTATION LAYOUT
-     ====================================================== -->
+        </div>
 
-<div class="docs-layout">
-
-
-  <!-- DESKTOP SIDEBAR -->
-
-  <aside class="docs-sidebar">
-
-    <div class="sidebar-label">
-      API REFERENCE
-    </div>
-
-
-    <input
-      id="search"
-      type="search"
-      placeholder="Search endpoint..."
-      autocomplete="off"
-      aria-label="Search endpoint"
-    >
-
-
-    <div id="side">
-      Loading...
-    </div>
-
-  </aside>
-
-
-
-  <!-- MAIN -->
-
-  <main class="docs-main">
-
-
-    <!-- MOBILE API BUTTON -->
-
-    <button
-      id="openApiMenu"
-      class="api-menu-button"
-      type="button"
-    >
-      <span>☰</span>
-      <span>API Menu</span>
-      <span class="api-menu-arrow">›</span>
-    </button>
-
-
-
-    <!-- DOCUMENTATION HEADER -->
-
-    <section class="doc-title">
-
-      <div class="doc-title-text">
-
-        <small>
-          DOCUMENTATION
-        </small>
-
-        <h1>
-          API Reference
-        </h1>
-
-        <p>
-          Endpoint dan dokumentasi dibaca otomatis
-          dari folder <code>api/</code>.
-        </p>
+        <span class="pill">
+          ● ONLINE
+        </span>
 
       </div>
 
 
-      <span class="pill">
-        ● ONLINE
-      </span>
+      <div id="docs">
+        Loading documentation...
+      </div>
 
-    </section>
-
-
-
-    <!-- API DOCUMENTATION -->
-
-    <div id="docs">
-      Loading documentation...
-    </div>
-
-
-  </main>
-
-</div>
-
-
-
-<!-- ======================================================
-     FOOTER
-     ====================================================== -->
-
-<footer>
-
-  <div class="wrap foot">
-
-    <b>
-      Yasam API
-    </b>
-
-    <span>
-      Documentation
-    </span>
-
-    <small>
-      © <span id="year"></span>
-    </small>
+    </main>
 
   </div>
 
-</footer>
 
+  <footer>
 
+    <div class="wrap foot">
 
-<script src="/script.js"></script>
+      <b>Yasam API</b>
 
+      <span>Documentation</span>
 
+      <small>
+        © <span id="year"></span>
+      </small>
 
-<!-- ======================================================
-     MOBILE MENU SCRIPT
-     ====================================================== -->
+    </div>
 
-<script>
+  </footer>
 
-(() => {
 
-  const menuBtn =
-    document.getElementById("menuBtn");
-
-  const mainNav =
-    document.getElementById("mainNav");
-
-  const openApiMenu =
-    document.getElementById("openApiMenu");
-
-  const closeApiMenu =
-    document.getElementById("closeApiMenu");
-
-  const mobileApiPanel =
-    document.getElementById("mobileApiPanel");
-
-
-  /* NAVBAR MENU */
-
-  if (menuBtn && mainNav) {
-
-    menuBtn.addEventListener(
-      "click",
-      () => {
-
-        const opened =
-          mainNav.classList.toggle("open");
-
-        menuBtn.setAttribute(
-          "aria-expanded",
-          opened ? "true" : "false"
-        );
-
-        menuBtn.textContent =
-          opened ? "✕" : "☰";
-
-      }
-    );
-
-
-    mainNav
-      .querySelectorAll("a")
-      .forEach(link => {
-
-        link.addEventListener(
-          "click",
-          () => {
-
-            mainNav.classList.remove("open");
-
-            menuBtn.textContent = "☰";
-
-            menuBtn.setAttribute(
-              "aria-expanded",
-              "false"
-            );
-
-          }
-        );
-
-      });
-
-  }
-
-
-
-  /* API MENU */
-
-  function openPanel() {
-
-    if (!mobileApiPanel) return;
-
-    mobileApiPanel.hidden = false;
-
-    document.body.classList.add(
-      "api-panel-open"
-    );
-
-  }
-
-
-  function closePanel() {
-
-    if (!mobileApiPanel) return;
-
-    mobileApiPanel.hidden = true;
-
-    document.body.classList.remove(
-      "api-panel-open"
-    );
-
-  }
-
-
-  if (openApiMenu) {
-
-    openApiMenu.addEventListener(
-      "click",
-      openPanel
-    );
-
-  }
-
-
-  if (closeApiMenu) {
-
-    closeApiMenu.addEventListener(
-      "click",
-      closePanel
-    );
-
-  }
-
-
-  /* Klik API */
-
-  if (mobileApiPanel) {
-
-    mobileApiPanel.addEventListener(
-      "click",
-      event => {
-
-        const link =
-          event.target.closest("a");
-
-        if (!link) return;
-
-        closePanel();
-
-      }
-    );
-
-  }
-
-
-  /* Escape */
-
-  document.addEventListener(
-    "keydown",
-    event => {
-
-      if (event.key === "Escape") {
-        closePanel();
-      }
-
-    }
-  );
-
-})();
-
-</script>
-
+  <script src="/script.js"></script>
 
 </body>
 </html>
