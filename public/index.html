@@ -1,9 +1,401 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Yasam API - Modular REST API"><title>Yasam API</title><link rel="stylesheet" href="/styles.css"></head><body>
-<header class="nav"><a class="brand" href="/"><span>Y</span> Yasam <b>API</b></a><nav><a class="active" href="/">Home</a><a href="/docs">Documentation</a></nav><button id="theme">☾</button></header>
-<main><section class="hero wrap"><div><small class="pill">● API ONLINE</small><h1>Simple API.<br><i>Powerful possibilities.</i></h1><p>REST API modular yang mudah dikembangkan. Tambahkan satu file di folder <code>api/</code> dan endpoint langsung terdaftar otomatis.</p><div class="actions"><a class="btn primary" href="/docs">Explore API →</a><a class="btn" href="/docs">Documentation</a></div></div><div class="terminal"><div class="dots">● ● ● <span>GET /api/example</span></div><pre>{
-  <b>"success"</b>: true,
-  <b>"message"</b>: "Hello, Yasam!"
-}</pre></div></section>
-<section class="stats wrap"><div><strong id="total">—</strong><small>Total API</small></div><div><strong id="online">—</strong><small>API Online</small></div><div><strong id="time">—</strong><small>Response</small></div></section>
-<section class="wrap endpoints"><div class="section-head"><div><small>ENDPOINTS</small><h2>Explore our APIs</h2></div><input id="search" placeholder="Search API..."></div><div id="grid" class="grid"><div class="empty">Loading APIs...</div></div></section></main>
-<footer><div class="wrap foot"><b>Yasam API</b><span>Modular REST API</span><a href="/docs">Docs</a><a href="/api/health">Health</a><small>© <span id="year"></span></small></div></footer><script src="/script.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Yasam API</title>
+  <meta
+    name="description"
+    content="Yasam API - Modular REST API"
+  >
+
+  <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="navbar">
+    <div class="nav-container">
+
+      <a href="/" class="brand">
+        <span class="brand-logo">Y</span>
+
+        <div class="brand-text">
+          <strong>Yasam API</strong>
+          <small>REST API Platform</small>
+        </div>
+      </a>
+
+      <button
+        class="menu-btn"
+        id="menuBtn"
+        type="button"
+        aria-label="Buka menu"
+        aria-expanded="false"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="nav-menu" id="navMenu">
+        <a href="/" class="nav-link active">Home</a>
+        <a href="/docs" class="nav-link">Documentation</a>
+
+        <button
+          id="themeBtn"
+          class="theme-btn"
+          type="button"
+          aria-label="Ubah tema"
+        >
+          🌙
+        </button>
+      </nav>
+
+    </div>
+  </header>
+
+
+  <!-- ================= HERO ================= -->
+  <main>
+
+    <section class="hero">
+      <div class="container hero-grid">
+
+        <div class="hero-content">
+
+          <div class="status-badge">
+            <span class="status-dot"></span>
+            <span id="heroStatus">API Online</span>
+          </div>
+
+          <h1>
+            Powerful APIs.
+            <span>Simple Integration.</span>
+          </h1>
+
+          <p class="hero-description">
+            Kumpulan REST API modular yang cepat, ringan,
+            dan mudah digunakan untuk berbagai kebutuhan
+            aplikasi kamu.
+          </p>
+
+          <div class="hero-actions">
+
+            <a href="#apis" class="btn btn-primary">
+              Explore API
+              <span>→</span>
+            </a>
+
+            <a href="/docs" class="btn btn-secondary">
+              Documentation
+            </a>
+
+          </div>
+
+          <div class="hero-terminal">
+
+            <div class="terminal-header">
+              <div class="terminal-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+
+              <span>API Request</span>
+            </div>
+
+            <div class="terminal-body">
+              <span class="terminal-method">GET</span>
+              <span class="terminal-url">
+                /api/example
+              </span>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="hero-card">
+
+          <div class="floating-card card-one">
+            <div class="floating-icon">⚡</div>
+
+            <div>
+              <strong>Fast Response</strong>
+              <span>Optimized API</span>
+            </div>
+          </div>
+
+          <div class="hero-logo">
+            <div class="hero-logo-circle">
+              Y
+            </div>
+
+            <h2>Yasam API</h2>
+
+            <p>
+              Developer Friendly
+            </p>
+          </div>
+
+          <div class="floating-card card-two">
+            <div class="floating-icon">✓</div>
+
+            <div>
+              <strong>REST Ready</strong>
+              <span>JSON Response</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ================= STATS ================= -->
+    <section class="stats-section">
+
+      <div class="container">
+
+        <div class="stats-grid">
+
+          <div class="stat-card">
+            <div class="stat-icon">⌘</div>
+
+            <div class="stat-content">
+              <span>Total API</span>
+              <strong id="totalApi">-</strong>
+            </div>
+          </div>
+
+
+          <div class="stat-card">
+            <div class="stat-icon">✓</div>
+
+            <div class="stat-content">
+              <span>API Online</span>
+              <strong id="onlineApi">-</strong>
+            </div>
+          </div>
+
+
+          <div class="stat-card">
+            <div class="stat-icon">⚡</div>
+
+            <div class="stat-content">
+              <span>Status</span>
+              <strong id="apiStatus">Checking...</strong>
+            </div>
+          </div>
+
+
+          <div class="stat-card">
+            <div class="stat-icon">◷</div>
+
+            <div class="stat-content">
+              <span>Last Update</span>
+              <strong id="lastUpdate">-</strong>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= API SECTION ================= -->
+    <section class="api-section" id="apis">
+
+      <div class="container">
+
+        <div class="section-header">
+
+          <div>
+            <div class="section-label">
+              AVAILABLE ENDPOINTS
+            </div>
+
+            <h2>
+              Explore Our APIs
+            </h2>
+
+            <p>
+              Gunakan endpoint API yang tersedia
+              untuk kebutuhan aplikasi kamu.
+            </p>
+          </div>
+
+
+          <div class="search-wrapper">
+
+            <span class="search-icon">⌕</span>
+
+            <input
+              id="searchInput"
+              type="search"
+              placeholder="Search API..."
+              autocomplete="off"
+            >
+
+          </div>
+
+        </div>
+
+
+        <div id="apiList" class="api-grid">
+
+          <div class="loading-card">
+            <div class="loading-spinner"></div>
+            <span>Loading API...</span>
+          </div>
+
+        </div>
+
+
+        <div
+          id="emptyState"
+          class="empty-state hidden"
+        >
+          <div class="empty-icon">⌕</div>
+
+          <h3>API tidak ditemukan</h3>
+
+          <p>
+            Coba gunakan kata kunci pencarian lain.
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer">
+
+    <div class="container footer-container">
+
+      <div class="footer-brand">
+
+        <a href="/" class="brand">
+
+          <span class="brand-logo">
+            Y
+          </span>
+
+          <div class="brand-text">
+            <strong>Yasam API</strong>
+            <small>REST API Platform</small>
+          </div>
+
+        </a>
+
+        <p>
+          Simple, fast and developer friendly REST API.
+        </p>
+
+      </div>
+
+
+      <div class="footer-links">
+
+        <a href="/">
+          Home
+        </a>
+
+        <a href="/docs">
+          Documentation
+        </a>
+
+        <a href="#apis">
+          APIs
+        </a>
+
+      </div>
+
+
+      <div class="footer-copy">
+        © <span id="year"></span> Yasam API
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <!-- ================= API CARD TEMPLATE ================= -->
+  <template id="apiTemplate">
+
+    <article class="api-card">
+
+      <div class="api-card-top">
+
+        <div class="api-card-icon">
+          API
+        </div>
+
+        <span class="method-badge">
+          GET
+        </span>
+
+      </div>
+
+
+      <div class="api-card-body">
+
+        <h3 class="api-name">
+          API Name
+        </h3>
+
+        <p class="api-description">
+          API Description
+        </p>
+
+        <div class="endpoint-box">
+
+          <code class="endpoint-url">
+            /api/example
+          </code>
+
+          <button
+            class="copy-btn"
+            type="button"
+            title="Copy endpoint"
+          >
+            Copy
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="api-card-footer">
+
+        <a
+          href="/docs"
+          class="view-docs"
+        >
+          View Documentation →
+        </a>
+
+      </div>
+
+    </article>
+
+  </template>
+
+
+  <script src="/script.js"></script>
+
+</body>
+</html>
