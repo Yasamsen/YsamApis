@@ -1,421 +1,427 @@
-<!DOCTYPE html><html lang="id">
+<!DOCTYPE html>
+<html lang="id">
 <head>
   <meta charset="UTF-8">
-<meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
->
-
-<title>Documentation — Yasam API</title>
-
-<meta
-  name="description"
-  content="Dokumentasi Yasam API"
-/>
-
-<link rel="stylesheet" href="/styles.css">
-</head><body class="docs-page">  <!-- NAVBAR -->  <header class="navbar">
-    <div class="nav-container">  <a href="/" class="brand">
-    <span class="brand-logo">Y</span>
-
-    <div class="brand-text">
-      <strong>Yasam API</strong>
-      <small>REST API Platform</small>
-    </div>
-  </a>
-
-  <button
-    class="menu-btn"
-    id="menuBtn"
-    type="button"
-    aria-label="Menu"
-    aria-expanded="false"
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
   >
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
 
-  <nav class="nav-menu" id="navMenu">
+  <title>Documentation — Yasam API</title>
 
-    <a href="/" class="nav-link">
-      Home
-    </a>
+  <meta
+    name="description"
+    content="Dokumentasi Yasam API"
+  >
 
-    <a
-      href="/docs"
-      class="nav-link active"
-    >
-      Documentation
-    </a>
+  <link rel="stylesheet" href="/styles.css">
+</head>
 
-    <button
-      id="themeBtn"
-      class="theme-btn"
-      type="button"
-      aria-label="Ubah tema"
-    >
-      ðŸŒ™
-    </button>
+<body class="docs-page">
 
-  </nav>
+  <!-- =====================================================
+       NAVBAR
+  ====================================================== -->
 
-</div>
+  <header class="navbar">
+    <div class="nav-container">
 
-  </header>  <!-- DOCUMENTATION -->  <main class="docs-main"><div class="docs-container">
+      <a href="/" class="brand">
+        <span class="brand-logo">Y</span>
+        <span class="brand-text">Yasam API</span>
+      </a>
 
-  <!-- MOBILE API SELECTOR -->
-  <section class="mobile-api-selector">
-
-    <div class="docs-search">
-
-      <span>âŒ•</span>
-
-      <input
-        id="docsSearchMobile"
-        type="search"
-        placeholder="Cari API..."
-        autocomplete="off"
+      <button
+        id="menuBtn"
+        class="menu-btn"
+        type="button"
+        aria-label="Menu"
+        aria-expanded="false"
       >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav id="navMenu" class="nav-menu">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/docs" class="nav-link active">Documentation</a>
+
+        <button
+          id="themeBtn"
+          class="theme-btn"
+          type="button"
+          aria-label="Ganti tema"
+        >
+          
+        </button>
+      </nav>
+
+    </div>
+  </header>
+
+
+  <!-- =====================================================
+       MAIN
+  ====================================================== -->
+
+  <main class="docs-main">
+
+    <div class="docs-container">
+
+      <!-- MOBILE API SELECTOR -->
+
+      <div class="mobile-api-selector">
+
+        <button
+          id="mobileApiButton"
+          class="mobile-api-button"
+          type="button"
+        >
+          <span id="mobileSelectedApi">
+            Pilih API
+          </span>
+
+          <span></span>
+        </button>
+
+        <div
+          id="mobileApiList"
+          class="mobile-api-list"
+        ></div>
+
+        <div
+          id="docsSearchMobile"
+          class="docs-search mobile-search"
+        >
+          <span></span>
+
+          <input
+            type="search"
+            placeholder="Cari API..."
+            autocomplete="off"
+          >
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           LAYOUT
+      ================================================== -->
+
+      <div class="docs-layout">
+
+        <!-- SIDEBAR -->
+
+        <aside class="docs-sidebar">
+
+          <div class="sidebar-title">
+            <span>API List</span>
+
+            <span
+              id="sidebarCount"
+              class="sidebar-count"
+            >
+              0
+            </span>
+          </div>
+
+          <div
+            id="docsSearch"
+            class="docs-search desktop-search"
+          >
+            <span></span>
+
+            <input
+              type="search"
+              placeholder="Cari API..."
+              autocomplete="off"
+            >
+          </div>
+
+          <div
+            id="apiSidebar"
+            class="api-sidebar"
+          >
+            <div class="docs-loading">
+              Memuat API...
+            </div>
+          </div>
+
+        </aside>
+
+
+        <!-- CONTENT -->
+
+        <section class="docs-content">
+
+          <!-- EMPTY -->
+
+          <div
+            id="docsEmpty"
+            class="docs-empty"
+          >
+            <div class="docs-empty-icon">
+              API
+            </div>
+
+            <h1>Pilih API</h1>
+
+            <p>
+              Pilih salah satu API dari daftar
+              untuk melihat dokumentasi.
+            </p>
+          </div>
+
+
+          <!-- DOCUMENTATION -->
+
+          <div
+            id="apiDocumentation"
+            class="api-documentation hidden"
+          >
+
+            <!-- HEADER -->
+
+            <div class="doc-header">
+
+              <div class="doc-heading">
+
+                <div
+                  id="docMethod"
+                  class="doc-method"
+                >
+                  GET
+                </div>
+
+                <h1 id="docName">
+                  API
+                </h1>
+
+                <p id="docDescription">
+                  Deskripsi API
+                </p>
+
+              </div>
+
+
+              <div class="doc-actions">
+
+                <button
+                  id="copyEndpointBtn"
+                  class="doc-action-btn"
+                  type="button"
+                >
+                  Copy URL
+                </button>
+
+                <button
+                  id="tryApiBtn"
+                  class="doc-action-btn primary"
+                  type="button"
+                >
+                  Try API
+                </button>
+
+              </div>
+
+            </div>
+
+
+            <!-- ENDPOINT -->
+
+            <section class="doc-section">
+
+              <h2>Endpoint</h2>
+
+              <div class="doc-url-box">
+
+                <code
+                  id="docEndpoint"
+                  class="doc-url"
+                >
+                  /
+                </code>
+
+                <button
+                  id="docUrlCopy"
+                  type="button"
+                >
+                  Copy
+                </button>
+
+              </div>
+
+            </section>
+
+
+            <!-- PARAMETERS -->
+
+            <section class="doc-section">
+
+              <div class="doc-section-heading">
+
+                <h2>Parameters</h2>
+
+                <p>
+                  Parameter yang diperlukan oleh API.
+                </p>
+
+              </div>
+
+              <div
+                id="parametersContainer"
+                class="parameters-container"
+              ></div>
+
+            </section>
+
+
+            <!-- TRY API -->
+
+            <section class="doc-section">
+
+              <div class="doc-section-heading">
+
+                <h2>Try API</h2>
+
+                <p>
+                  Jalankan request langsung dari
+                  halaman dokumentasi.
+                </p>
+
+              </div>
+
+
+              <div class="try-box">
+
+                <div class="try-url-row">
+
+                  <div
+                    id="tryMethod"
+                    class="try-method"
+                  >
+                    GET
+                  </div>
+
+                  <input
+                    id="tryUrl"
+                    class="try-url-input"
+                    type="text"
+                    spellcheck="false"
+                    autocomplete="off"
+                  >
+
+                  <button
+                    id="sendRequestBtn"
+                    class="send-request-btn"
+                    type="button"
+                  >
+                    Send
+                  </button>
+
+                </div>
+
+
+                <div
+                  id="tryResult"
+                  class="try-result hidden"
+                >
+
+                  <div class="response-title">
+                    Response
+                  </div>
+
+                  <pre id="responseCode">{}</pre>
+
+                </div>
+
+              </div>
+
+            </section>
+
+
+            <!-- RESPONSE EXAMPLE -->
+
+            <section class="doc-section">
+
+              <div class="doc-section-heading">
+
+                <h2>Response Example</h2>
+
+                <p>
+                  Contoh response dari API.
+                </p>
+
+              </div>
+
+
+              <div class="code-block">
+
+                <div class="code-header">
+
+                  <span>
+                    JSON
+                  </span>
+
+                  <button
+                    id="copyResponseBtn"
+                    type="button"
+                  >
+                    Copy
+                  </button>
+
+                </div>
+
+                <pre id="responseExample">{}</pre>
+
+              </div>
+
+            </section>
+
+          </div>
+
+        </section>
+
+      </div>
 
     </div>
 
-    <button
-      id="mobileApiButton"
-      class="mobile-api-button"
-      type="button"
-    >
-      <span id="mobileSelectedApi">
-        Pilih API
-      </span>
-
-      <span>âŒ„</span>
-    </button>
-
-    <div
-      id="mobileApiList"
-      class="mobile-api-list"
-    ></div>
-
-  </section>
+  </main>
 
 
-  <div class="docs-layout">
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
 
-    <!-- SIDEBAR -->
-    <aside class="docs-sidebar">
+  <footer class="footer">
 
-      <div class="sidebar-title">
-        <span>API</span>
-        <span
-          id="sidebarCount"
-          class="sidebar-count"
-        >
-          0
+    <div class="container footer-container">
+
+      <div class="footer-brand">
+        <strong>Yasam API</strong>
+
+        <span>
+          Simple • Fast • Modular
         </span>
       </div>
 
-
-      <div class="docs-search desktop-search">
-
-        <span>âŒ•</span>
-
-        <input
-          id="docsSearch"
-          type="search"
-          placeholder="Cari API..."
-          autocomplete="off"
-        >
-
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/docs">Documentation</a>
       </div>
 
-
-      <div
-        id="apiSidebar"
-        class="api-sidebar"
-      >
-
-        <div class="docs-loading">
-          Loading...
-        </div>
-
+      <div class="footer-copy">
+        © <span id="year"></span> Yasam API
       </div>
 
-    </aside>
+    </div>
 
+  </footer>
 
-    <!-- CONTENT -->
-    <section class="docs-content">
 
-      <div
-        id="docsEmpty"
-        class="docs-empty"
-      >
+  <script src="/script.js" defer></script>
 
-        <div class="docs-empty-icon">
-          API
-        </div>
-
-        <h1>
-          Yasam API Documentation
-        </h1>
-
-        <p>
-          Pilih API dari daftar untuk melihat
-          dokumentasi lengkap.
-        </p>
-
-      </div>
-
-
-      <article
-        id="apiDocumentation"
-        class="api-documentation hidden"
-      >
-
-        <!-- API HEADER -->
-        <div class="doc-header">
-
-          <div class="doc-heading">
-
-            <div
-              id="docMethod"
-              class="doc-method"
-            >
-              GET
-            </div>
-
-            <h1 id="docName">
-              API Name
-            </h1>
-
-            <p id="docDescription">
-              API description
-            </p>
-
-          </div>
-
-
-          <div class="doc-actions">
-
-            <button
-              id="copyEndpointBtn"
-              class="doc-action-btn"
-              type="button"
-            >
-              Copy URL
-            </button>
-
-            <button
-              id="tryApiBtn"
-              class="doc-action-btn primary"
-              type="button"
-            >
-              Try API
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <!-- ENDPOINT -->
-        <section class="doc-section">
-
-          <h2>
-            Endpoint
-          </h2>
-
-          <div class="doc-url-box">
-
-            <span
-              id="docEndpoint"
-              class="doc-url"
-            >
-              /api/example
-            </span>
-
-            <button
-              id="docUrlCopy"
-              type="button"
-            >
-              Copy
-            </button>
-
-          </div>
-
-        </section>
-
-
-        <!-- PARAMETERS -->
-        <section class="doc-section">
-
-          <div class="doc-section-heading">
-
-            <div>
-              <h2>
-                Parameters
-              </h2>
-
-              <p>
-                Parameter yang dapat digunakan
-                pada endpoint ini.
-              </p>
-            </div>
-
-          </div>
-
-
-          <div
-            id="parametersContainer"
-            class="parameters-container"
-          >
-
-            <div class="no-parameters">
-              Tidak ada parameter.
-            </div>
-
-          </div>
-
-        </section>
-
-
-        <!-- TRY API -->
-        <section class="doc-section">
-
-          <h2>
-            Try API
-          </h2>
-
-          <div class="try-box">
-
-            <div class="try-url-row">
-
-              <div
-                id="tryMethod"
-                class="try-method"
-              >
-                GET
-              </div>
-
-              <input
-                id="tryUrl"
-                class="try-url-input"
-                type="text"
-                placeholder="API URL"
-              >
-
-              <button
-                id="sendRequestBtn"
-                class="send-request-btn"
-                type="button"
-              >
-                Send
-              </button>
-
-            </div>
-
-
-            <div
-              id="tryResult"
-              class="try-result hidden"
-            >
-
-              <div class="response-title">
-                Response
-              </div>
-
-              <pre><code id="responseCode">{}</code></pre>
-
-            </div>
-
-          </div>
-
-        </section>
-
-
-        <!-- RESPONSE -->
-        <section class="doc-section">
-
-          <h2>
-            Response
-          </h2>
-
-          <p class="response-description">
-            Contoh response JSON dari endpoint.
-          </p>
-
-          <div class="code-block">
-
-            <div class="code-header">
-              <span>JSON</span>
-
-              <button
-                id="copyResponseBtn"
-                type="button"
-              >
-                Copy
-              </button>
-            </div>
-
-            <pre><code id="responseExample">{
-
-"success": true
-}</code></pre>
-
-          </div>
-
-        </section>
-
-
-      </article>
-
-    </section>
-
-  </div>
-
-</div>
-
-  </main>  <!-- FOOTER -->  <footer class="footer"><div class="container footer-container">
-
-  <div class="footer-brand">
-
-    <a href="/" class="brand">
-
-      <span class="brand-logo">
-        Y
-      </span>
-
-      <div class="brand-text">
-        <strong>Yasam API</strong>
-        <small>REST API Platform</small>
-      </div>
-
-    </a>
-
-  </div>
-
-
-  <div class="footer-links">
-
-    <a href="/">
-      Home
-    </a>
-
-    <a href="/docs">
-      Documentation
-    </a>
-
-  </div>
-
-
-  <div class="footer-copy">
-    Â© <span id="year"></span> Yasam API
-  </div>
-
-</div>
-
-  </footer>  <script src="/script.js"></script></body>
+</body>
 </html>
