@@ -1,19 +1,45 @@
 /* =========================================================
-   YASAM API — DOCUMENTATION RESPONSIVE
-   ========================================================= */
+   YASAM API — GLOBAL
+========================================================= */
+
+:root {
+  --bg: #f7f8fc;
+  --surface: #ffffff;
+  --surface-2: #f1f3f8;
+
+  --text: #151820;
+  --text-soft: #687080;
+  --text-muted: #9299a8;
+
+  --border: #e4e7ee;
+
+  --primary: #635bff;
+  --success: #12b76a;
+  --danger: #f04438;
+
+  --shadow:
+    0 10px 30px rgba(20, 24, 35, .06);
+}
+
+html.dark {
+  --bg: #0b0e13;
+  --surface: #11151c;
+  --surface-2: #181d26;
+
+  --text: #f2f4f7;
+  --text-soft: #aab2c0;
+  --text-muted: #727b8b;
+
+  --border: #252c37;
+
+  --shadow:
+    0 10px 30px rgba(0, 0, 0, .25);
+}
+
 
 /* =========================================================
-   GLOBAL SAFETY
-   ========================================================= */
-
-html,
-body {
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-}
+   RESET
+========================================================= */
 
 *,
 *::before,
@@ -21,46 +47,238 @@ body {
   box-sizing: border-box;
 }
 
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+
+  margin: 0;
+  padding: 0;
+
+  overflow-x: hidden;
+
+  background: var(--bg);
+  color: var(--text);
+
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+body {
+  min-height: 100vh;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.hidden {
+  display: none !important;
+}
+
 
 /* =========================================================
-   DOCUMENTATION PAGE
-   ========================================================= */
+   NAVBAR
+========================================================= */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  width: 100%;
+
+  border-bottom: 1px solid var(--border);
+
+  background:
+    color-mix(
+      in srgb,
+      var(--surface) 92%,
+      transparent
+    );
+
+  backdrop-filter: blur(14px);
+}
+
+.nav-container {
+  width: min(
+    1400px,
+    calc(100% - 32px)
+  );
+
+  min-width: 0;
+
+  min-height: 68px;
+
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  min-width: 0;
+
+  font-weight: 800;
+}
+
+.brand-logo {
+  width: 35px;
+  height: 35px;
+
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: var(--primary);
+  color: #fff;
+
+  font-weight: 900;
+}
+
+.brand-text {
+  white-space: nowrap;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+}
+
+.nav-link {
+  padding: 9px 12px;
+
+  border-radius: 8px;
+
+  color: var(--text-soft);
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.theme-btn {
+  width: 38px;
+  height: 38px;
+
+  border: 1px solid var(--border);
+  border-radius: 9px;
+
+  background: var(--surface);
+  color: var(--text);
+
+  font-size: 15px;
+}
+
+.menu-btn {
+  display: none;
+
+  width: 40px;
+  height: 40px;
+
+  padding: 9px;
+
+  border: 1px solid var(--border);
+  border-radius: 9px;
+
+  background: var(--surface);
+}
+
+.menu-btn span {
+  display: block;
+
+  width: 100%;
+  height: 2px;
+
+  margin: 4px 0;
+
+  background: var(--text);
+
+  transition: .2s ease;
+}
+
+.menu-btn.open span:nth-child(1) {
+  transform:
+    translateY(6px)
+    rotate(45deg);
+}
+
+.menu-btn.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-btn.open span:nth-child(3) {
+  transform:
+    translateY(-6px)
+    rotate(-45deg);
+}
+
+
+/* =========================================================
+   DOCUMENTATION
+========================================================= */
 
 .docs-page {
   width: 100%;
   max-width: 100%;
   min-width: 0;
+
   min-height: 100vh;
 }
-
-
-/* =========================================================
-   DOC MAIN
-   ========================================================= */
 
 .docs-main {
   width: 100%;
   max-width: 100%;
   min-width: 0;
+
   padding: 25px 0 60px;
 }
 
-
-/* =========================================================
-   CONTAINER
-   ========================================================= */
-
 .docs-container {
-  width: min(1400px, calc(100% - 32px));
+  width: min(
+    1400px,
+    calc(100% - 32px)
+  );
+
   max-width: 100%;
   min-width: 0;
+
   margin: 0 auto;
 }
-
-
-/* =========================================================
-   DOC LAYOUT
-   ========================================================= */
 
 .docs-layout {
   width: 100%;
@@ -68,24 +286,30 @@ body {
   min-width: 0;
 
   display: grid;
-  grid-template-columns: 250px minmax(0, 1fr);
+
+  grid-template-columns:
+    250px
+    minmax(0, 1fr);
+
   gap: 25px;
 }
 
 
 /* =========================================================
    SIDEBAR
-   ========================================================= */
+========================================================= */
 
 .docs-sidebar {
   position: sticky;
-  top: 95px;
+  top: 90px;
 
   align-self: start;
 
   width: 100%;
   min-width: 0;
-  max-height: calc(100vh - 120px);
+
+  max-height:
+    calc(100vh - 110px);
 
   overflow-x: hidden;
   overflow-y: auto;
@@ -100,23 +324,19 @@ body {
   scrollbar-width: thin;
 }
 
-
-/* =========================================================
-   SIDEBAR TITLE
-   ========================================================= */
-
 .sidebar-title {
   display: flex;
   align-items: center;
   justify-content: space-between;
 
   gap: 10px;
+
   margin-bottom: 12px;
 
   font-size: 12px;
   font-weight: 800;
 
-  letter-spacing: .8px;
+  letter-spacing: .7px;
   text-transform: uppercase;
 }
 
@@ -139,7 +359,7 @@ body {
 
 /* =========================================================
    SEARCH
-   ========================================================= */
+========================================================= */
 
 .docs-search {
   position: relative;
@@ -169,9 +389,11 @@ body {
   width: 100%;
   max-width: 100%;
   min-width: 0;
+
   height: 39px;
 
-  padding: 0 10px 0 33px;
+  padding:
+    0 10px 0 33px;
 
   border: 1px solid var(--border);
   border-radius: 9px;
@@ -192,14 +414,20 @@ body {
     rgba(99, 91, 255, .08);
 }
 
+.mobile-search {
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
 
 /* =========================================================
    API SIDEBAR
-   ========================================================= */
+========================================================= */
 
 .api-sidebar {
   display: flex;
   flex-direction: column;
+
   gap: 4px;
 
   width: 100%;
@@ -234,8 +462,11 @@ body {
 }
 
 .api-sidebar-item.selected {
-  background: rgba(99, 91, 255, .09);
-  border-color: rgba(99, 91, 255, .15);
+  background:
+    rgba(99, 91, 255, .09);
+
+  border-color:
+    rgba(99, 91, 255, .15);
 
   color: var(--primary);
 }
@@ -252,13 +483,14 @@ body {
     monospace;
 
   font-size: 8px;
-  font-weight: 800;
+  font-weight: 900;
 }
 
 .sidebar-name {
   min-width: 0;
 
   overflow: hidden;
+
   text-overflow: ellipsis;
   white-space: nowrap;
 
@@ -269,33 +501,25 @@ body {
 
 /* =========================================================
    CONTENT
-   ========================================================= */
+========================================================= */
 
-.docs-content {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-}
-
+.docs-content,
 .api-documentation {
   width: 100%;
   max-width: 100%;
   min-width: 0;
 }
 
-.hidden {
-  display: none !important;
-}
-
 
 /* =========================================================
-   EMPTY STATE
-   ========================================================= */
+   EMPTY
+========================================================= */
 
 .docs-empty {
   width: 100%;
   max-width: 100%;
   min-width: 0;
+
   min-height: 500px;
 
   display: flex;
@@ -325,15 +549,19 @@ body {
 
   border-radius: 18px;
 
-  background: rgba(99, 91, 255, .1);
+  background:
+    rgba(99, 91, 255, .1);
+
   color: var(--primary);
 
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 900;
 }
 
 .docs-empty h1 {
   max-width: 100%;
+
+  margin: 0;
 
   font-size: 25px;
   line-height: 1.2;
@@ -344,7 +572,7 @@ body {
 .docs-empty p {
   max-width: 500px;
 
-  margin-top: 8px;
+  margin: 8px 0 0;
 
   color: var(--text-soft);
 
@@ -355,8 +583,8 @@ body {
 
 
 /* =========================================================
-   DOC HEADER
-   ========================================================= */
+   DOCUMENT HEADER
+========================================================= */
 
 .doc-header {
   width: 100%;
@@ -390,7 +618,9 @@ body {
 
   border-radius: 6px;
 
-  background: rgba(18, 183, 106, .1);
+  background:
+    rgba(18, 183, 106, .1);
+
   color: var(--success);
 
   font-family:
@@ -408,12 +638,17 @@ body {
 .doc-heading h1 {
   max-width: 100%;
 
-  margin-top: 10px;
+  margin: 10px 0 0;
 
   overflow-wrap: anywhere;
   word-break: break-word;
 
-  font-size: clamp(25px, 4vw, 38px);
+  font-size: clamp(
+    25px,
+    4vw,
+    38px
+  );
+
   line-height: 1.1;
 
   letter-spacing: -.8px;
@@ -422,7 +657,7 @@ body {
 .doc-heading p {
   max-width: 700px;
 
-  margin-top: 8px;
+  margin: 8px 0 0;
 
   color: var(--text-soft);
 
@@ -468,13 +703,18 @@ body {
   border-color: var(--primary);
 
   background: var(--primary);
-  color: white;
+  color: #fff;
+}
+
+.doc-action-btn.copied {
+  border-color: var(--success);
+  color: var(--success);
 }
 
 
 /* =========================================================
-   DOC SECTION
-   ========================================================= */
+   SECTION
+========================================================= */
 
 .doc-section {
   width: 100%;
@@ -482,6 +722,7 @@ body {
   min-width: 0;
 
   margin-top: 18px;
+
   padding: 22px;
 
   border: 1px solid var(--border);
@@ -493,17 +734,18 @@ body {
 .doc-section h2 {
   max-width: 100%;
 
+  margin: 0;
+
   font-size: 17px;
   line-height: 1.3;
 
   overflow-wrap: anywhere;
 }
 
-.doc-section-heading p,
-.response-description {
+.doc-section-heading p {
   max-width: 100%;
 
-  margin-top: 4px;
+  margin: 4px 0 0;
 
   color: var(--text-soft);
 
@@ -515,7 +757,7 @@ body {
 
 /* =========================================================
    ENDPOINT
-   ========================================================= */
+========================================================= */
 
 .doc-url-box {
   width: 100%;
@@ -534,6 +776,8 @@ body {
   border-radius: 9px;
 
   background: var(--surface-2);
+
+  overflow: hidden;
 }
 
 .doc-url {
@@ -585,7 +829,7 @@ body {
 
 /* =========================================================
    PARAMETERS
-   ========================================================= */
+========================================================= */
 
 .parameters-container {
   width: 100%;
@@ -593,6 +837,8 @@ body {
   min-width: 0;
 
   margin-top: 15px;
+
+  overflow: hidden;
 }
 
 .parameter-table {
@@ -677,10 +923,26 @@ body {
   color: var(--text-muted);
 }
 
+.no-parameters {
+  width: 100%;
+  max-width: 100%;
+
+  padding: 15px;
+
+  border: 1px dashed var(--border);
+  border-radius: 9px;
+
+  color: var(--text-muted);
+
+  text-align: center;
+
+  font-size: 11px;
+}
+
 
 /* =========================================================
    TRY API
-   ========================================================= */
+========================================================= */
 
 .try-box {
   width: 100%;
@@ -694,6 +956,8 @@ body {
   border-radius: 11px;
 
   background: var(--surface-2);
+
+  overflow: hidden;
 }
 
 .try-url-row {
@@ -720,7 +984,9 @@ body {
 
   border-radius: 8px;
 
-  background: rgba(18, 183, 106, .1);
+  background:
+    rgba(18, 183, 106, .1);
+
   color: var(--success);
 
   font-family:
@@ -780,7 +1046,7 @@ body {
   border-radius: 8px;
 
   background: var(--primary);
-  color: white;
+  color: #fff;
 
   font-size: 10px;
   font-weight: 800;
@@ -788,8 +1054,8 @@ body {
 
 
 /* =========================================================
-   TRY RESPONSE
-   ========================================================= */
+   RESPONSE
+========================================================= */
 
 .try-result {
   width: 100%;
@@ -797,6 +1063,8 @@ body {
   min-width: 0;
 
   margin-top: 12px;
+
+  overflow: hidden;
 }
 
 .response-title {
@@ -810,7 +1078,8 @@ body {
   text-transform: uppercase;
 }
 
-.try-result pre {
+.try-result pre,
+.code-block pre {
   width: 100%;
   max-width: 100%;
   min-width: 0;
@@ -819,9 +1088,10 @@ body {
   overflow-y: hidden;
 
   margin: 0;
+
   padding: 13px;
 
-  border-radius: 9px;
+  border: 0;
 
   background: #0f131a;
   color: #d5dbe5;
@@ -845,7 +1115,7 @@ body {
 
 /* =========================================================
    CODE BLOCK
-   ========================================================= */
+========================================================= */
 
 .code-block {
   width: 100%;
@@ -893,41 +1163,10 @@ body {
   font-weight: 700;
 }
 
-.code-block pre {
-  display: block;
-
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-
-  overflow-x: auto;
-  overflow-y: hidden;
-
-  margin: 0;
-  padding: 15px;
-
-  color: #d5dbe5;
-
-  font-family:
-    ui-monospace,
-    SFMono-Regular,
-    Menlo,
-    Monaco,
-    Consolas,
-    monospace;
-
-  font-size: 10px;
-  line-height: 1.65;
-
-  white-space: pre;
-
-  -webkit-overflow-scrolling: touch;
-}
-
 
 /* =========================================================
-   MOBILE API SELECTOR
-   ========================================================= */
+   MOBILE SELECTOR
+========================================================= */
 
 .mobile-api-selector {
   display: none;
@@ -943,6 +1182,7 @@ body {
   width: 100%;
   max-width: 100%;
   min-width: 0;
+
   min-height: 45px;
 
   display: flex;
@@ -994,6 +1234,7 @@ body {
   width: 100%;
   max-width: 100%;
   min-width: 0;
+
   min-height: 42px;
 
   display: flex;
@@ -1039,7 +1280,7 @@ body {
 
 /* =========================================================
    LOADING / ERROR
-   ========================================================= */
+========================================================= */
 
 .docs-loading,
 .docs-error {
@@ -1055,26 +1296,81 @@ body {
   font-size: 11px;
 }
 
-.no-parameters {
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer {
   width: 100%;
   max-width: 100%;
 
-  padding: 15px;
+  border-top: 1px solid var(--border);
 
-  border: 1px dashed var(--border);
-  border-radius: 9px;
+  background: var(--surface);
+}
 
+.container {
+  width: min(
+    1400px,
+    calc(100% - 32px)
+  );
+
+  max-width: 100%;
+  min-width: 0;
+
+  margin: 0 auto;
+}
+
+.footer-container {
+  min-height: 90px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+
+  min-width: 0;
+}
+
+.footer-brand strong {
+  font-size: 12px;
+}
+
+.footer-brand span,
+.footer-copy {
   color: var(--text-muted);
 
-  text-align: center;
+  font-size: 10px;
+}
 
-  font-size: 11px;
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 15px;
+
+  color: var(--text-soft);
+
+  font-size: 10px;
+}
+
+.footer-links a:hover {
+  color: var(--primary);
 }
 
 
 /* =========================================================
    TABLET
-   ========================================================= */
+========================================================= */
 
 @media (max-width: 900px) {
 
@@ -1098,109 +1394,95 @@ body {
   .doc-action-btn {
     flex: 1 1 0;
   }
+
 }
 
 
 /* =========================================================
    MOBILE
-   ========================================================= */
+========================================================= */
 
 @media (max-width: 700px) {
 
-  /* -----------------------------------------
-     Page
-     ----------------------------------------- */
-
-  html,
-  body {
+  .nav-container {
     width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
+    min-height: 60px;
+
+    padding:
+      0 10px;
   }
 
-  .docs-page {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
+  .menu-btn {
+    display: block;
   }
+
+  .nav-menu {
+    position: absolute;
+
+    top: 60px;
+    left: 10px;
+    right: 10px;
+
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 4px;
+
+    padding: 8px;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    background: var(--surface);
+
+    box-shadow: var(--shadow);
+  }
+
+  .nav-menu.open {
+    display: flex;
+  }
+
+  .nav-link {
+    width: 100%;
+  }
+
+  .theme-btn {
+    width: 100%;
+  }
+
 
   .docs-main {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-
-    padding: 15px 0 40px;
+    padding:
+      15px 0 40px;
   }
 
   .docs-container {
     width: 100%;
-    max-width: 100%;
-    min-width: 0;
 
     margin: 0;
-    padding-left: 10px;
-    padding-right: 10px;
+
+    padding:
+      0 10px;
   }
-
-
-  /* -----------------------------------------
-     Layout
-     ----------------------------------------- */
 
   .docs-layout {
     display: block;
 
     width: 100%;
     max-width: 100%;
-    min-width: 0;
   }
 
   .docs-sidebar {
     display: none;
   }
 
-  .docs-content {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-  }
-
-  .api-documentation {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-  }
-
-
-  /* -----------------------------------------
-     Mobile selector
-     ----------------------------------------- */
-
   .mobile-api-selector {
     display: block;
-
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-
-    margin-bottom: 12px;
   }
 
-  .mobile-api-button {
-    width: 100%;
-    max-width: 100%;
-  }
-
-
-  /* -----------------------------------------
-     Header
-     ----------------------------------------- */
 
   .doc-header {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-
     padding: 18px;
 
     border-radius: 14px;
@@ -1210,32 +1492,16 @@ body {
 
   .doc-heading {
     width: 100%;
-    max-width: 100%;
-    min-width: 0;
   }
 
   .doc-heading h1 {
-    max-width: 100%;
-
     font-size: 26px;
-
-    overflow-wrap: anywhere;
-    word-break: break-word;
   }
 
   .doc-heading p {
-    max-width: 100%;
-
     font-size: 12px;
-
-    overflow-wrap: anywhere;
-    word-break: break-word;
   }
 
-
-  /* -----------------------------------------
-     Actions
-     ----------------------------------------- */
 
   .doc-actions {
     display: grid;
@@ -1245,28 +1511,18 @@ body {
       minmax(0, 1fr);
 
     width: 100%;
-    max-width: 100%;
 
     gap: 7px;
   }
 
   .doc-action-btn {
     width: 100%;
-    min-width: 0;
-    max-width: 100%;
   }
 
 
-  /* -----------------------------------------
-     Sections
-     ----------------------------------------- */
-
   .doc-section {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-
     margin-top: 12px;
+
     padding: 16px;
 
     border-radius: 14px;
@@ -1279,43 +1535,18 @@ body {
   }
 
 
-  /* -----------------------------------------
-     Endpoint
-     
-     Hanya isi endpoint yang scroll.
-     Body tidak ikut scroll.
-     ----------------------------------------- */
-
   .doc-url-box {
     width: 100%;
-    max-width: 100%;
-    min-width: 0;
-
     overflow: hidden;
   }
 
   .doc-url {
     width: 0;
     min-width: 0;
-    max-width: 100%;
-
-    overflow-x: auto;
 
     font-size: 9px;
   }
 
-
-  /* -----------------------------------------
-     Try API
-     ----------------------------------------- */
-
-  .try-box {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-
-    overflow: hidden;
-  }
 
   .try-url-row {
     display: grid;
@@ -1323,9 +1554,6 @@ body {
     grid-template-columns:
       auto
       minmax(0, 1fr);
-
-    width: 100%;
-    max-width: 100%;
   }
 
   .try-method {
@@ -1334,41 +1562,18 @@ body {
 
   .try-url-input {
     width: 100%;
-    min-width: 0;
-    max-width: 100%;
   }
 
   .send-request-btn {
     grid-column: 1 / -1;
 
     width: 100%;
-    max-width: 100%;
   }
 
-
-  /* -----------------------------------------
-     Parameters
-     
-     Tabel sendiri yang scroll.
-     ----------------------------------------- */
-
-  .parameters-container {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-
-    overflow: hidden;
-  }
 
   .parameter-table {
     width: 100%;
-    max-width: 100%;
-    min-width: 0;
-
     overflow-x: auto;
-    overflow-y: hidden;
-
-    -webkit-overflow-scrolling: touch;
   }
 
   .parameter-row {
@@ -1378,59 +1583,20 @@ body {
   }
 
 
-  /* -----------------------------------------
-     Code
-     
-     Hanya code yang scroll.
-     ----------------------------------------- */
-
   .code-block {
     width: 100%;
-    max-width: 100%;
-    min-width: 0;
-
     overflow: hidden;
   }
 
-  .code-block pre {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-
-    overflow-x: auto;
-    overflow-y: hidden;
-
-    font-size: 9px;
-
-    -webkit-overflow-scrolling: touch;
-  }
-
-
-  /* -----------------------------------------
-     Response
-     ----------------------------------------- */
-
-  .try-result {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-
-    overflow: hidden;
-  }
-
+  .code-block pre,
   .try-result pre {
     width: 100%;
-    max-width: 100%;
-    min-width: 0;
 
     overflow-x: auto;
-    overflow-y: hidden;
+
+    font-size: 9px;
   }
 
-
-  /* -----------------------------------------
-     Empty
-     ----------------------------------------- */
 
   .docs-empty {
     min-height: 350px;
@@ -1445,18 +1611,30 @@ body {
   .docs-empty p {
     font-size: 11px;
   }
+
+
+  .footer-container {
+    min-height: auto;
+
+    flex-direction: column;
+    align-items: flex-start;
+
+    padding:
+      20px 0;
+  }
+
 }
 
 
 /* =========================================================
    VERY SMALL PHONE
-   ========================================================= */
+========================================================= */
 
 @media (max-width: 380px) {
 
   .docs-container {
-    padding-left: 8px;
-    padding-right: 8px;
+    padding:
+      0 8px;
   }
 
   .doc-header {
@@ -1483,7 +1661,6 @@ body {
     display: block;
 
     width: 100%;
-    max-width: 100%;
 
     margin-bottom: 5px;
   }
@@ -1491,4 +1668,5 @@ body {
   .doc-url-box button {
     width: 100%;
   }
+
 }
