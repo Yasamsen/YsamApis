@@ -1,0 +1,88 @@
+{
+  "generatedAt": "2026-09-02T22:28:32.330Z",
+  "apis": [
+    {
+      "name": "Example API",
+      "description": "Simple health-check example endpoint.",
+      "method": "GET",
+      "endpoint": "/api/example",
+      "parameters": [],
+      "file": "example.js"
+    },
+    {
+      "name": "Facebook Downloader",
+      "description": "Download media from Facebook.",
+      "method": "GET",
+      "endpoint": "/api/facebook",
+      "parameters": [
+        {
+          "name": "url",
+          "type": "string",
+          "required": true,
+          "description": "Facebook URL"
+        }
+      ],
+      "file": "facebook.js"
+    },
+    {
+      "name": "Instagram Downloader",
+      "description": "Download media from Instagram.",
+      "method": "GET",
+      "endpoint": "/api/instagram",
+      "parameters": [
+        {
+          "name": "url",
+          "type": "string",
+          "required": true,
+          "description": "Instagram URL"
+        }
+      ],
+      "file": "instagram.js"
+    },
+    {
+      "name": "Spotify Downloader",
+      "description": "Download media from Spotify.",
+      "method": "GET",
+      "endpoint": "/api/spotify",
+      "parameters": [
+        {
+          "name": "url",
+          "type": "string",
+          "required": true,
+          "description": "Spotify URL"
+        }
+      ],
+      "file": "spotify.js"
+    },
+    {
+      "name": "Tiktok Downloader",
+      "description": "Download media from Tiktok.",
+      "method": "GET",
+      "endpoint": "/api/tiktok",
+      "parameters": [
+        {
+          "name": "url",
+          "type": "string",
+          "required": true,
+          "description": "Tiktok URL"
+        }
+      ],
+      "file": "tiktok.js"
+    },
+    {
+      "name": "Youtube Downloader",
+      "description": "Download media from Youtube.",
+      "method": "GET",
+      "endpoint": "/api/youtube",
+      "parameters": [
+        {
+          "name": "url",
+          "type": "string",
+          "required": true,
+          "description": "Youtube URL"
+        }
+      ],
+      "file": "youtube.js"
+    }
+  ]
+}
