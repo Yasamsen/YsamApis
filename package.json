@@ -1,0 +1,1 @@
+{"name":"yasam-api-page","version":"1.0.0","private":true,"description":"Modular REST API page for Vercel","main":"api/index.js","engines":{"node":">=22"}}
