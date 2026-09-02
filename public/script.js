@@ -1,12 +1,760 @@
-(()=>{
-const $=s=>document.querySelector(s); let apis=[];
-function esc(x){return String(x??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')}
-function copy(t,b){navigator.clipboard?.writeText(t).then(()=>{let x=b.textContent;b.textContent='Copied!';setTimeout(()=>b.textContent=x,1000)}).catch(()=>prompt('Copy:',t))}
-function theme(){let saved=localStorage.getItem('theme');if(saved==='light')document.documentElement.dataset.theme='light';let b=$('#theme');if(!b)return;b.textContent=document.documentElement.dataset.theme==='light'?'☀':'☾';b.onclick=()=>{let l=document.documentElement.dataset.theme==='light';document.documentElement.dataset.theme=l?'':'light';localStorage.setItem('theme',l?'dark':'light');b.textContent=l?'☾':'☀'}}
-function filter(q){q=q.toLowerCase();let a=apis.filter(x=>x.name.toLowerCase().includes(q)||x.endpoint.toLowerCase().includes(q)||x.description.toLowerCase().includes(q));renderHome(a);renderDocs(a)}
-function renderHome(a){let g=$('#grid');if(!g)return;g.innerHTML=a.length?a.map(x=>`<article class="card"><div><span class="method">${esc(x.method)}</span><button class="copy" data-copy="${esc(x.endpoint)}">Copy</button></div><h3>${esc(x.name)}</h3><p>${esc(x.description)}</p><code>${esc(x.endpoint)}</code><a href="/docs#${encodeURIComponent(x.endpoint)}">View documentation →</a></article>`).join(''):'<div class="empty">API tidak ditemukan.</div>';g.querySelectorAll('.copy').forEach(b=>b.onclick=()=>copy(b.dataset.copy,b))}
-function param(x){let rows=Object.entries(x.parameters||{});if(!rows.length)return '<p class="muted">Tidak ada parameter.</p>';return `<div class="params"><div class="prow head"><span>Name</span><span>Type</span><span>Required</span><span>Description</span></div>${rows.map(([n,p])=>`<div class="prow"><code>${esc(n)}</code><span>${esc(p.type||'string')}</span><span>${p.required?'Yes':'No'}</span><span>${esc(p.description||'')}</span></div>`).join('')}</div>`}
-function renderDocs(a){let d=$('#docs'),s=$('#side');if(!d)return;s.innerHTML=a.map(x=>`<a href="#${encodeURIComponent(x.endpoint)}"><span class="method mini">${esc(x.method)}</span>${esc(x.name)}</a>`).join('');d.innerHTML=a.map(x=>{let req=x.example?.request||x.endpoint,res=x.example?.response||{success:true};return `<article class="doc" id="${encodeURIComponent(x.endpoint)}"><div class="dochead"><div><div><span class="method">${esc(x.method)}</span> <code>${esc(x.endpoint)}</code></div><h2>${esc(x.name)}</h2><p>${esc(x.description)}</p></div><div><button class="btn copydoc" data-copy="${esc(x.endpoint)}">Copy</button> <button class="btn primary try">Try API</button></div></div><h3>Parameters</h3>${param(x)}<div class="examples"><div><h3>Example Request</h3><pre>${esc(req)}</pre></div><div><h3>Example Response</h3><pre>${esc(JSON.stringify(res,null,2))}</pre></div></div><div class="trybox" hidden><div class="tryrow"><input value="${esc(req)}"><button class="btn primary run">Send Request</button></div><pre class="out">Ready.</pre></div></article>`}).join('');d.querySelectorAll('.copydoc').forEach(b=>b.onclick=()=>copy(b.dataset.copy,b));d.querySelectorAll('.try').forEach(b=>b.onclick=()=>{let p=b.closest('.doc').querySelector('.trybox');p.hidden=!p.hidden});d.querySelectorAll('.run').forEach(b=>b.onclick=async()=>{let p=b.closest('.trybox'),i=p.querySelector('input'),o=p.querySelector('.out');o.textContent='Loading...';try{let t=performance.now(),r=await fetch(new URL(i.value,location.origin)),txt=await r.text();let j;try{j=JSON.stringify(JSON.parse(txt),null,2)}catch{j=txt}o.textContent=`HTTP ${r.status} • ${Math.round(performance.now()-t)} ms\n\n${j}`}catch(e){o.textContent='Request failed: '+e.message}})}
-async function load(){try{let t=performance.now(),r=await fetch('/api'),d=await r.json();apis=d.apis||[];if($('#total'))$('#total').textContent=apis.length;if($('#online'))$('#online').textContent=apis.length;if($('#time'))$('#time').textContent=Math.round(performance.now()-t)+'ms';renderHome(apis);renderDocs(apis)}catch(e){if($('#grid'))$('#grid').innerHTML='<div class="empty">Gagal memuat API. <button onclick="location.reload()">Retry</button></div>';if($('#docs'))$('#docs').textContent='Gagal memuat dokumentasi.'}}
-$('#search')?.addEventListener('input',e=>filter(e.target.value));$('#year')&&($('#year').textContent=new Date().getFullYear());theme();load();
-})();
+"use strict";
+
+/*
+|--------------------------------------------------------------------------
+| Yasam API Frontend
+|--------------------------------------------------------------------------
+| - Load API otomatis dari /api
+| - Search API
+| - Copy endpoint
+| - Dark/light mode
+| - Responsive mobile menu
+|--------------------------------------------------------------------------
+*/
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const menuBtn = document.getElementById("menuBtn");
+const navMenu = document.getElementById("navMenu");
+
+const themeBtn = document.getElementById("themeBtn");
+
+const apiList = document.getElementById("apiList");
+const apiTemplate = document.getElementById("apiTemplate");
+
+const searchInput = document.getElementById("searchInput");
+const emptyState = document.getElementById("emptyState");
+
+const totalApi = document.getElementById("totalApi");
+const onlineApi = document.getElementById("onlineApi");
+const apiStatus = document.getElementById("apiStatus");
+const lastUpdate = document.getElementById("lastUpdate");
+
+const heroStatus = document.getElementById("heroStatus");
+const year = document.getElementById("year");
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let apiData = [];
+
+
+/* =========================================================
+   YEAR
+========================================================= */
+
+if (year) {
+  year.textContent = new Date().getFullYear();
+}
+
+
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+if (menuBtn && navMenu) {
+
+  menuBtn.addEventListener("click", () => {
+
+    const isOpen = navMenu.classList.toggle("open");
+
+    menuBtn.classList.toggle("open", isOpen);
+
+    menuBtn.setAttribute(
+      "aria-expanded",
+      String(isOpen)
+    );
+
+  });
+
+
+  navMenu.querySelectorAll("a").forEach(link => {
+
+    link.addEventListener("click", () => {
+
+      navMenu.classList.remove("open");
+
+      menuBtn.classList.remove("open");
+
+      menuBtn.setAttribute(
+        "aria-expanded",
+        "false"
+      );
+
+    });
+
+  });
+
+}
+
+
+/* =========================================================
+   THEME
+========================================================= */
+
+function setTheme(theme) {
+
+  if (theme === "dark") {
+
+    document.documentElement.classList.add("dark");
+
+    if (themeBtn) {
+      themeBtn.textContent = "☀️";
+    }
+
+  } else {
+
+    document.documentElement.classList.remove("dark");
+
+    if (themeBtn) {
+      themeBtn.textContent = "🌙";
+    }
+
+  }
+
+}
+
+
+function loadTheme() {
+
+  const savedTheme =
+    localStorage.getItem("yasam-theme");
+
+  if (savedTheme) {
+
+    setTheme(savedTheme);
+
+    return;
+
+  }
+
+
+  const prefersDark =
+    window.matchMedia &&
+    window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+
+
+  setTheme(
+    prefersDark ? "dark" : "light"
+  );
+
+}
+
+
+if (themeBtn) {
+
+  themeBtn.addEventListener("click", () => {
+
+    const isDark =
+      document.documentElement.classList.contains("dark");
+
+    const nextTheme =
+      isDark ? "light" : "dark";
+
+    setTheme(nextTheme);
+
+    localStorage.setItem(
+      "yasam-theme",
+      nextTheme
+    );
+
+  });
+
+}
+
+
+loadTheme();
+
+
+/* =========================================================
+   FETCH API
+========================================================= */
+
+async function loadApis() {
+
+  try {
+
+    setApiLoading(true);
+
+
+    const response =
+      await fetch("/api", {
+        method: "GET",
+        headers: {
+          "Accept": "application/json"
+        },
+        cache: "no-store"
+      });
+
+
+    if (!response.ok) {
+      throw new Error(
+        `HTTP ${response.status}`
+      );
+    }
+
+
+    const data =
+      await response.json();
+
+
+    if (!data || !Array.isArray(data.apis)) {
+
+      throw new Error(
+        "Format response API tidak valid"
+      );
+
+    }
+
+
+    apiData = data.apis;
+
+
+    updateStats(data);
+
+    renderApis(apiData);
+
+    setApiOnline(true);
+
+
+  } catch (error) {
+
+    console.error(
+      "Gagal mengambil daftar API:",
+      error
+    );
+
+
+    apiData = [];
+
+    updateStats({
+      total: 0,
+      apis: []
+    });
+
+    setApiOnline(false);
+
+    showApiError();
+
+  }
+
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+function setApiLoading(loading) {
+
+  if (!apiList) {
+    return;
+  }
+
+
+  if (loading) {
+
+    apiList.innerHTML = `
+      <div class="loading-card">
+        <div class="loading-spinner"></div>
+        <span>Loading API...</span>
+      </div>
+    `;
+
+  }
+
+}
+
+
+/* =========================================================
+   UPDATE STATS
+========================================================= */
+
+function updateStats(data) {
+
+  const total =
+    Number(data.total) ||
+    (Array.isArray(data.apis)
+      ? data.apis.length
+      : 0);
+
+
+  if (totalApi) {
+    totalApi.textContent = total;
+  }
+
+
+  if (onlineApi) {
+    onlineApi.textContent = total;
+  }
+
+
+  if (apiStatus) {
+    apiStatus.textContent = "Online";
+  }
+
+
+  if (lastUpdate) {
+
+    lastUpdate.textContent =
+      new Date().toLocaleTimeString(
+        "id-ID",
+        {
+          hour: "2-digit",
+          minute: "2-digit"
+        }
+      );
+
+  }
+
+}
+
+/* =========================================================
+   API ONLINE STATUS
+========================================================= */
+
+function setApiOnline(online) {
+
+  if (heroStatus) {
+
+    heroStatus.textContent =
+      online
+        ? "API Online"
+        : "API Offline";
+
+  }
+
+
+  if (apiStatus) {
+
+    apiStatus.textContent =
+      online
+        ? "Online"
+        : "Offline";
+
+  }
+
+}
+
+
+/* =========================================================
+   API ERROR
+========================================================= */
+
+function showApiError() {
+
+  if (!apiList) {
+    return;
+  }
+
+
+  apiList.innerHTML = `
+    <div class="error-card">
+      <div class="error-icon">!</div>
+
+      <h3>Gagal memuat API</h3>
+
+      <p>
+        Tidak dapat mengambil daftar API.
+      </p>
+
+      <button
+        class="btn btn-primary retry-btn"
+        type="button"
+      >
+        Coba Lagi
+      </button>
+    </div>
+  `;
+
+
+  const retry =
+    apiList.querySelector(".retry-btn");
+
+
+  retry?.addEventListener(
+    "click",
+    loadApis
+  );
+
+}
+
+
+/* =========================================================
+   RENDER API
+========================================================= */
+
+function renderApis(apis) {
+
+  if (!apiList) {
+    return;
+  }
+
+
+  apiList.innerHTML = "";
+
+
+  if (!apis.length) {
+
+    emptyState?.classList.remove(
+      "hidden"
+    );
+
+    return;
+
+  }
+
+
+  emptyState?.classList.add(
+    "hidden"
+  );
+
+
+  apis.forEach(api => {
+
+    const card =
+      apiTemplate.content
+        .cloneNode(true);
+
+
+    const article =
+      card.querySelector(".api-card");
+
+
+    const name =
+      card.querySelector(".api-name");
+
+
+    const description =
+      card.querySelector(".api-description");
+
+
+    const endpoint =
+      card.querySelector(".endpoint-url");
+
+
+    const method =
+      card.querySelector(".method-badge");
+
+
+    const icon =
+      card.querySelector(".api-card-icon");
+
+
+    const copyBtn =
+      card.querySelector(".copy-btn");
+
+
+    const docs =
+      card.querySelector(".view-docs");
+
+
+    const apiName =
+      api.name ||
+      "Unnamed API";
+
+
+    const apiDescription =
+      api.description ||
+      "No description";
+
+
+    const apiEndpoint =
+      api.endpoint ||
+      "#";
+
+
+    const apiMethod =
+      (
+        api.method ||
+        "GET"
+      ).toUpperCase();
+
+
+    name.textContent =
+      apiName;
+
+
+    description.textContent =
+      apiDescription;
+
+
+    endpoint.textContent =
+      apiEndpoint;
+
+
+    method.textContent =
+      apiMethod;
+
+
+    icon.textContent =
+      apiName
+        .trim()
+        .charAt(0)
+        .toUpperCase() ||
+      "A";
+
+
+    method.classList.add(
+      `method-${apiMethod.toLowerCase()}`
+    );
+
+
+    if (docs) {
+
+      docs.href =
+        `/docs#${encodeURIComponent(
+          apiEndpoint
+        )}`;
+
+    }
+
+
+    if (copyBtn) {
+
+      copyBtn.addEventListener(
+        "click",
+        async () => {
+
+          await copyText(
+            apiEndpoint,
+            copyBtn
+          );
+
+        }
+      );
+
+    }
+
+
+    apiList.appendChild(card);
+
+  });
+
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+if (searchInput) {
+
+  searchInput.addEventListener(
+    "input",
+    event => {
+
+      const query =
+        event.target.value
+          .trim()
+          .toLowerCase();
+
+
+      if (!query) {
+
+        renderApis(apiData);
+
+        return;
+
+      }
+
+
+      const filtered =
+        apiData.filter(api => {
+
+          const name =
+            String(
+              api.name || ""
+            ).toLowerCase();
+
+
+          const description =
+            String(
+              api.description || ""
+            ).toLowerCase();
+
+
+          const endpoint =
+            String(
+              api.endpoint || ""
+            ).toLowerCase();
+
+
+          const method =
+            String(
+              api.method || ""
+            ).toLowerCase();
+
+
+          return (
+            name.includes(query) ||
+            description.includes(query) ||
+            endpoint.includes(query) ||
+            method.includes(query)
+          );
+
+        });
+
+
+      renderApis(filtered);
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   COPY TEXT
+========================================================= */
+
+async function copyText(text, button) {
+
+  try {
+
+    await navigator.clipboard.writeText(
+      text
+    );
+
+
+    const oldText =
+      button.textContent;
+
+
+    button.textContent =
+      "Copied!";
+
+
+    button.classList.add(
+      "copied"
+    );
+
+
+    setTimeout(() => {
+
+      button.textContent =
+        oldText;
+
+      button.classList.remove(
+        "copied"
+      );
+
+    }, 1500);
+
+
+  } catch (error) {
+
+    console.error(
+      "Copy failed:",
+      error
+    );
+
+
+    const textarea =
+      document.createElement(
+        "textarea"
+      );
+
+
+    textarea.value = text;
+
+    textarea.style.position =
+      "fixed";
+
+    textarea.style.opacity =
+      "0";
+
+
+    document.body.appendChild(
+      textarea
+    );
+
+
+    textarea.select();
+
+
+    try {
+
+      document.execCommand(
+        "copy"
+      );
+
+      button.textContent =
+        "Copied!";
+
+    } catch {
+
+      button.textContent =
+        "Failed";
+
+    }
+
+
+    textarea.remove();
+
+
+    setTimeout(() => {
+
+      button.textContent =
+        "Copy";
+
+    }, 1500);
+
+  }
+
+}
+
+
+/* =========================================================
+   CLOSE MENU WHEN CLICKING OUTSIDE
+========================================================= */
+
+document.addEventListener(
+  "click",
+  event => {
+
+    if (
+      !navMenu ||
+      !menuBtn
+    ) {
+      return;
+    }
+
+
+    if (
+      navMenu.classList.contains("open") &&
+      !navMenu.contains(event.target) &&
+      !menuBtn.contains(event.target)
+    ) {
+
+      navMenu.classList.remove(
+        "open"
+      );
+
+      menuBtn.classList.remove(
+        "open"
+      );
+
+      menuBtn.setAttribute(
+        "aria-expanded",
+        "false"
+      );
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   START
+========================================================= */
+
+loadApis();
