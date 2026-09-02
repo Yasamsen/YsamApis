@@ -2,22 +2,14 @@
 
   "use strict";
 
-
-  /* ======================================================
-     HELPER
-     ====================================================== */
-
-  const $ = selector =>
-    document.querySelector(selector);
-
+  const $ = (selector) => document.querySelector(selector);
 
   let apis = [];
 
 
-
-  /* ======================================================
+  /* =========================================================
      ESCAPE HTML
-     ====================================================== */
+     ========================================================= */
 
   function esc(value) {
 
@@ -25,239 +17,136 @@
       .replaceAll("&", "&amp;")
       .replaceAll("<", "&lt;")
       .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
+      .replaceAll('"', "&quot;");
 
   }
 
 
-
-  /* ======================================================
+  /* =========================================================
      COPY
-     ====================================================== */
+     ========================================================= */
 
-  async function copy(text, button) {
+  function copy(text, button) {
 
-    if (!button) return;
+    if (!text) return;
 
+    const original = button ? button.textContent : "";
 
-    const old =
-      button.textContent;
+    if (navigator.clipboard) {
 
+      navigator.clipboard
+        .writeText(text)
+        .then(() => {
 
-    try {
+          if (!button) return;
 
-      if (
-        navigator.clipboard &&
-        navigator.clipboard.writeText
-      ) {
+          button.textContent = "Copied!";
 
-        await navigator.clipboard.writeText(text);
+          setTimeout(() => {
+            button.textContent = original;
+          }, 1000);
 
-      } else {
+        })
+        .catch(() => {
 
-        const textarea =
-          document.createElement("textarea");
+          prompt("Copy:", text);
 
-        textarea.value = text;
-
-        textarea.style.position = "fixed";
-        textarea.style.opacity = "0";
-
-        document.body.appendChild(textarea);
-
-        textarea.select();
-
-        document.execCommand("copy");
-
-        textarea.remove();
-
-      }
-
-
-      button.textContent =
-        "Copied!";
-
-
-      setTimeout(() => {
-
-        button.textContent =
-          old;
-
-      }, 1000);
-
-
-    } catch {
-
-      prompt(
-        "Copy:",
-        text
-      );
-
-    }
-
-  }
-
-
-
-  /* ======================================================
-     THEME
-     ====================================================== */
-
-  function initTheme() {
-
-    const saved =
-      localStorage.getItem("theme");
-
-
-    if (saved === "light") {
-
-      document.documentElement
-        .setAttribute(
-          "data-theme",
-          "light"
-        );
+        });
 
     } else {
 
-      document.documentElement
-        .removeAttribute(
-          "data-theme"
-        );
+      prompt("Copy:", text);
 
     }
-
-
-    const button =
-      $("#theme");
-
-
-    if (!button) return;
-
-
-    function update() {
-
-      const light =
-        document.documentElement
-          .getAttribute("data-theme")
-          === "light";
-
-
-      button.textContent =
-        light ? "☀" : "☾";
-
-    }
-
-
-    update();
-
-
-    button.addEventListener(
-      "click",
-      () => {
-
-        const light =
-          document.documentElement
-            .getAttribute("data-theme")
-            === "light";
-
-
-        if (light) {
-
-          document.documentElement
-            .removeAttribute(
-              "data-theme"
-            );
-
-          localStorage.setItem(
-            "theme",
-            "dark"
-          );
-
-        } else {
-
-          document.documentElement
-            .setAttribute(
-              "data-theme",
-              "light"
-            );
-
-          localStorage.setItem(
-            "theme",
-            "light"
-          );
-
-        }
-
-
-        update();
-
-      }
-    );
 
   }
 
 
+  /* =========================================================
+     THEME
+     ========================================================= */
 
-  /* ======================================================
-     SEARCH FILTER
-     ====================================================== */
+  function theme() {
+
+    const saved = localStorage.getItem("theme");
+
+    if (saved === "light") {
+
+      document.documentElement.dataset.theme = "light";
+
+    }
+
+    const button = $("#theme");
+
+    if (!button) return;
+
+    button.textContent =
+      document.documentElement.dataset.theme === "light"
+        ? "☀"
+        : "☾";
+
+
+    button.onclick = () => {
+
+      const isLight =
+        document.documentElement.dataset.theme === "light";
+
+      document.documentElement.dataset.theme =
+        isLight ? "" : "light";
+
+      localStorage.setItem(
+        "theme",
+        isLight ? "dark" : "light"
+      );
+
+      button.textContent =
+        isLight ? "☾" : "☀";
+
+    };
+
+  }
+
+
+  /* =========================================================
+     FILTER
+     ========================================================= */
 
   function filter(query) {
 
-    const q =
-      String(query || "")
-        .trim()
-        .toLowerCase();
+    query = String(query || "").toLowerCase().trim();
 
+    const result = apis.filter((api) => {
 
-    const result =
-      apis.filter(api => {
+      return (
+        String(api.name || "")
+          .toLowerCase()
+          .includes(query) ||
 
-        const name =
-          String(api.name || "")
-            .toLowerCase();
+        String(api.endpoint || "")
+          .toLowerCase()
+          .includes(query) ||
 
-        const endpoint =
-          String(api.endpoint || "")
-            .toLowerCase();
+        String(api.description || "")
+          .toLowerCase()
+          .includes(query)
+      );
 
-        const description =
-          String(api.description || "")
-            .toLowerCase();
-
-        const method =
-          String(api.method || "")
-            .toLowerCase();
-
-
-        return (
-          name.includes(q) ||
-          endpoint.includes(q) ||
-          description.includes(q) ||
-          method.includes(q)
-        );
-
-      });
+    });
 
 
     renderHome(result);
-
     renderDocs(result);
 
   }
 
 
-
-  /* ======================================================
+  /* =========================================================
      HOME API GRID
-     ====================================================== */
+     ========================================================= */
 
   function renderHome(list) {
 
-    const grid =
-      $("#grid");
-
+    const grid = $("#grid");
 
     if (!grid) return;
 
@@ -275,105 +164,80 @@
     }
 
 
-    grid.innerHTML =
-      list.map(api => {
+    grid.innerHTML = list.map((api) => {
 
-        const endpoint =
-          api.endpoint || "";
+      return `
+        <article class="card">
 
+          <div>
 
-        return `
+            <span class="method">
+              ${esc(api.method || "GET")}
+            </span>
 
-          <article class="card">
-
-            <div>
-
-              <span class="method">
-                ${esc(api.method || "GET")}
-              </span>
-
-
-              <button
-                class="copy"
-                type="button"
-                data-copy="${esc(endpoint)}"
-              >
-                Copy
-              </button>
-
-            </div>
-
-
-            <h3>
-              ${esc(
-                api.name ||
-                "Unnamed API"
-              )}
-            </h3>
-
-
-            <p>
-              ${esc(
-                api.description ||
-                "No description"
-              )}
-            </p>
-
-
-            <code>
-              ${esc(endpoint)}
-            </code>
-
-
-            <a
-              href="/docs#${encodeURIComponent(endpoint)}"
+            <button
+              class="copy"
+              data-copy="${esc(api.endpoint || "")}"
+              type="button"
             >
-              View documentation →
-            </a>
+              Copy
+            </button>
 
-          </article>
+          </div>
 
-        `;
+          <h3>
+            ${esc(api.name || "Unnamed API")}
+          </h3>
 
-      }).join("");
+          <p>
+            ${esc(api.description || "")}
+          </p>
+
+          <code>
+            ${esc(api.endpoint || "")}
+          </code>
+
+          <a
+            href="/docs#${encodeURIComponent(api.endpoint || "")}"
+          >
+            View documentation →
+          </a>
+
+        </article>
+      `;
+
+    }).join("");
 
 
     grid
       .querySelectorAll(".copy")
-      .forEach(button => {
+      .forEach((button) => {
 
-        button.addEventListener(
-          "click",
-          () => {
+        button.onclick = () => {
 
-            copy(
-              button.dataset.copy || "",
-              button
-            );
+          copy(
+            button.dataset.copy,
+            button
+          );
 
-          }
-        );
+        };
 
       });
 
   }
 
 
+  /* =========================================================
+     PARAMETERS
+     ========================================================= */
 
-  /* ======================================================
-     PARAMETER TABLE
-     ====================================================== */
+  function param(api) {
 
-  function renderParameters(api) {
-
-    const parameters =
-      api.parameters &&
-      typeof api.parameters === "object"
-        ? Object.entries(api.parameters)
-        : [];
+    const rows =
+      Object.entries(api.parameters || {});
 
 
-    if (!parameters.length) {
+    if (!rows.length) {
 
       return `
         <p class="muted">
@@ -385,188 +249,115 @@
 
 
     return `
+      <div class="params">
 
-      <div class="params-wrap">
+        <div class="prow head">
 
-        <div class="params">
-
-          <div class="prow head">
-
-            <span>Name</span>
-
-            <span>Type</span>
-
-            <span>Required</span>
-
-            <span>Description</span>
-
-          </div>
-
-
-          ${parameters.map(
-            ([name, value]) => {
-
-              const parameter =
-                value &&
-                typeof value === "object"
-                  ? value
-                  : {};
-
-
-              return `
-
-                <div class="prow">
-
-                  <code>
-                    ${esc(name)}
-                  </code>
-
-                  <span>
-                    ${esc(
-                      parameter.type ||
-                      "string"
-                    )}
-                  </span>
-
-                  <span>
-                    ${
-                      parameter.required
-                        ? "Yes"
-                        : "No"
-                    }
-                  </span>
-
-                  <span>
-                    ${esc(
-                      parameter.description ||
-                      ""
-                    )}
-                  </span>
-
-                </div>
-
-              `;
-
-            }
-          ).join("")}
+          <span>Name</span>
+          <span>Type</span>
+          <span>Required</span>
+          <span>Description</span>
 
         </div>
 
-      </div>
+        ${rows.map(([name, parameter]) => {
 
+          parameter = parameter || {};
+
+          return `
+            <div class="prow">
+
+              <code>
+                ${esc(name)}
+              </code>
+
+              <span>
+                ${esc(parameter.type || "string")}
+              </span>
+
+              <span>
+                ${parameter.required ? "Yes" : "No"}
+              </span>
+
+              <span>
+                ${esc(parameter.description || "")}
+              </span>
+
+            </div>
+          `;
+
+        }).join("")}
+
+      </div>
     `;
 
   }
 
 
-
-  /* ======================================================
-     API SIDEBAR
-     ====================================================== */
-
-  function createApiLinks(list) {
-
-    if (!list.length) {
-
-      return `
-        <div class="side-empty">
-          API tidak ditemukan.
-        </div>
-      `;
-
-    }
-
-
-    return list.map(api => {
-
-      const endpoint =
-        api.endpoint || "";
-
-
-      return `
-
-        <a
-          href="#${encodeURIComponent(endpoint)}"
-        >
-
-          <span class="method mini">
-            ${esc(
-              api.method || "GET"
-            )}
-          </span>
-
-          <span class="side-name">
-            ${esc(
-              api.name ||
-              "Unnamed API"
-            )}
-          </span>
-
-        </a>
-
-      `;
-
-    }).join("");
-
-  }
-
-
-
-  /* ======================================================
+  /* =========================================================
      DOCUMENTATION
-     ====================================================== */
+     ========================================================= */
 
   function renderDocs(list) {
 
-    const docs =
-      $("#docs");
-
-
-    const side =
-      $("#side");
-
-
-    const mobileSide =
-      $("#mobileSide");
+    const docs = $("#docs");
+    const side = $("#side");
 
 
     if (!docs) return;
 
 
-
-    /* SIDEBAR */
+    /* -------------------------
+       SIDEBAR
+       ------------------------- */
 
     if (side) {
 
-      side.innerHTML =
-        createApiLinks(list);
+      if (!list.length) {
+
+        side.innerHTML = `
+          <p class="muted">
+            API tidak ditemukan.
+          </p>
+        `;
+
+      } else {
+
+        side.innerHTML = list.map((api) => {
+
+          return `
+            <a
+              href="#${encodeURIComponent(api.endpoint || "")}"
+            >
+
+              <span class="method mini">
+                ${esc(api.method || "GET")}
+              </span>
+
+              <span>
+                ${esc(api.name || "Unnamed API")}
+              </span>
+
+            </a>
+          `;
+
+        }).join("");
+
+      }
 
     }
 
 
-    /* MOBILE SIDEBAR */
-
-    if (mobileSide) {
-
-      mobileSide.innerHTML =
-        createApiLinks(list);
-
-    }
-
-
-
-    /* EMPTY */
+    /* -------------------------
+       DOCUMENTATION CONTENT
+       ------------------------- */
 
     if (!list.length) {
 
       docs.innerHTML = `
-
         <div class="empty">
-
-          Dokumentasi API tidak ditemukan.
-
+          API tidak ditemukan.
         </div>
-
       `;
 
       return;
@@ -574,402 +365,305 @@
     }
 
 
+    docs.innerHTML = list.map((api) => {
 
-    /* DOCS */
+      const request =
+        api.example?.request ||
+        api.endpoint ||
+        "";
 
-    docs.innerHTML =
-      list.map(api => {
-
-        const endpoint =
-          api.endpoint || "";
-
-
-        const request =
-          api.example?.request ||
-          endpoint;
-
-
-        const response =
-          api.example?.response ||
-          {
-            success: true
-          };
+      const response =
+        api.example?.response ||
+        {
+          success: true
+        };
 
 
-        const id =
-          encodeURIComponent(endpoint);
+      return `
+        <article
+          class="doc"
+          id="${encodeURIComponent(api.endpoint || "")}"
+        >
+
+          <div class="dochead">
+
+            <div class="doc-info">
+
+              <div class="endpoint-line">
+
+                <span class="method">
+                  ${esc(api.method || "GET")}
+                </span>
+
+                <code>
+                  ${esc(api.endpoint || "")}
+                </code>
+
+              </div>
+
+              <h2>
+                ${esc(api.name || "Unnamed API")}
+              </h2>
+
+              <p>
+                ${esc(api.description || "")}
+              </p>
+
+            </div>
 
 
-        return `
+            <div class="doc-actions">
 
-          <article
-            class="doc"
-            id="${id}"
+              <button
+                class="btn copydoc"
+                data-copy="${esc(api.endpoint || "")}"
+                type="button"
+              >
+                Copy
+              </button>
+
+              <button
+                class="btn primary try"
+                type="button"
+              >
+                Try API
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <h3>
+            Parameters
+          </h3>
+
+          ${param(api)}
+
+
+          <div class="examples">
+
+            <div>
+
+              <h3>
+                Example Request
+              </h3>
+
+              <pre>${esc(request)}</pre>
+
+            </div>
+
+
+            <div>
+
+              <h3>
+                Example Response
+              </h3>
+
+              <pre>${esc(
+                JSON.stringify(
+                  response,
+                  null,
+                  2
+                )
+              )}</pre>
+
+            </div>
+
+          </div>
+
+
+          <div
+            class="trybox"
+            hidden
           >
 
+            <div class="tryrow">
 
-            <div class="dochead">
+              <input
+                type="text"
+                value="${esc(request)}"
+                autocomplete="off"
+                spellcheck="false"
+              >
 
-
-              <div class="doc-info">
-
-
-                <div class="endpoint-line">
-
-
-                  <span class="method">
-
-                    ${esc(
-                      api.method ||
-                      "GET"
-                    )}
-
-                  </span>
-
-
-                  <div class="endpoint-scroll">
-
-                    <code>
-                      ${esc(endpoint)}
-                    </code>
-
-                  </div>
-
-
-                </div>
-
-
-
-                <h2>
-
-                  ${esc(
-                    api.name ||
-                    "Unnamed API"
-                  )}
-
-                </h2>
-
-
-
-                <p>
-
-                  ${esc(
-                    api.description ||
-                    "No description"
-                  )}
-
-                </p>
-
-
-              </div>
-
-
-
-              <div class="doc-actions">
-
-
-                <button
-                  class="btn copydoc"
-                  type="button"
-                  data-copy="${esc(endpoint)}"
-                >
-                  Copy
-                </button>
-
-
-                <button
-                  class="btn primary try"
-                  type="button"
-                >
-                  Try API
-                </button>
-
-
-              </div>
-
+              <button
+                class="btn primary run"
+                type="button"
+              >
+                Send Request
+              </button>
 
             </div>
 
 
+            <pre class="out">Ready.</pre>
 
-            <h3>
-              Parameters
-            </h3>
+          </div>
 
+        </article>
+      `;
 
-            ${renderParameters(api)}
-
-
-
-            <div class="examples">
+    }).join("");
 
 
-              <div class="example-box">
-
-                <h3>
-                  Example Request
-                </h3>
-
-
-                <pre>${esc(request)}</pre>
-
-              </div>
-
-
-
-              <div class="example-box">
-
-                <h3>
-                  Example Response
-                </h3>
-
-
-                <pre>${esc(
-                  JSON.stringify(
-                    response,
-                    null,
-                    2
-                  )
-                )}</pre>
-
-              </div>
-
-
-            </div>
-
-
-
-            <div
-              class="trybox"
-              hidden
-            >
-
-
-              <div class="tryrow">
-
-
-                <input
-                  type="text"
-                  value="${esc(request)}"
-                  aria-label="API request"
-                >
-
-
-                <button
-                  class="btn primary run"
-                  type="button"
-                >
-                  Send Request
-                </button>
-
-
-              </div>
-
-
-              <pre class="out">Ready.</pre>
-
-
-            </div>
-
-
-          </article>
-
-        `;
-
-      }).join("");
-
-
-
-    /* ====================================================
-       COPY BUTTONS
-       ==================================================== */
+    /* =========================================================
+       COPY DOCUMENTATION
+       ========================================================= */
 
     docs
       .querySelectorAll(".copydoc")
-      .forEach(button => {
+      .forEach((button) => {
 
-        button.addEventListener(
-          "click",
-          () => {
+        button.onclick = () => {
 
-            copy(
-              button.dataset.copy || "",
-              button
-            );
+          copy(
+            button.dataset.copy,
+            button
+          );
 
-          }
-        );
+        };
 
       });
 
 
-
-    /* ====================================================
-       TRY BUTTONS
-       ==================================================== */
+    /* =========================================================
+       TRY API BUTTON
+       ========================================================= */
 
     docs
       .querySelectorAll(".try")
-      .forEach(button => {
+      .forEach((button) => {
 
-        button.addEventListener(
-          "click",
-          () => {
+        button.onclick = () => {
 
-            const article =
-              button.closest(".doc");
+          const doc =
+            button.closest(".doc");
 
+          if (!doc) return;
 
-            if (!article) return;
+          const box =
+            doc.querySelector(".trybox");
 
+          if (!box) return;
 
-            const box =
-              article.querySelector(
-                ".trybox"
-              );
+          box.hidden = !box.hidden;
 
-
-            if (!box) return;
-
-
-            box.hidden =
-              !box.hidden;
-
-          }
-        );
+        };
 
       });
 
 
-
-    /* ====================================================
-       RUN BUTTONS
-       ==================================================== */
+    /* =========================================================
+       SEND REQUEST
+       ========================================================= */
 
     docs
       .querySelectorAll(".run")
-      .forEach(button => {
+      .forEach((button) => {
 
-        button.addEventListener(
-          "click",
-          async () => {
+        button.onclick = async () => {
 
-            const box =
-              button.closest(
-                ".trybox"
-              );
+          const box =
+            button.closest(".trybox");
 
+          if (!box) return;
 
-            if (!box) return;
+          const input =
+            box.querySelector("input");
 
-
-            const input =
-              box.querySelector(
-                "input"
-              );
+          const output =
+            box.querySelector(".out");
 
 
-            const output =
-              box.querySelector(
-                ".out"
-              );
+          if (!input || !output) return;
 
 
-            if (!input || !output) {
-              return;
-            }
+          const value =
+            input.value.trim();
 
 
-            const value =
-              input.value.trim();
-
-
-            if (!value) {
-
-              output.textContent =
-                "Request URL kosong.";
-
-              return;
-
-            }
-
+          if (!value) {
 
             output.textContent =
-              "Loading...";
+              "Request URL kosong.";
+
+            return;
+
+          }
+
+
+          output.textContent =
+            "Loading...";
+
+
+          try {
+
+            const start =
+              performance.now();
+
+
+            const url =
+              new URL(
+                value,
+                location.origin
+              );
+
+
+            const response =
+              await fetch(url.href);
+
+
+            const text =
+              await response.text();
+
+
+            let result;
 
 
             try {
 
-              const url =
-                new URL(
-                  value,
-                  location.origin
+              result =
+                JSON.stringify(
+                  JSON.parse(text),
+                  null,
+                  2
                 );
 
+            } catch {
 
-              const start =
-                performance.now();
-
-
-              const response =
-                await fetch(url);
-
-
-              const text =
-                await response.text();
-
-
-              let result;
-
-
-              try {
-
-                result =
-                  JSON.stringify(
-                    JSON.parse(text),
-                    null,
-                    2
-                  );
-
-              } catch {
-
-                result =
-                  text;
-
-              }
-
-
-              const elapsed =
-                Math.round(
-                  performance.now() -
-                  start
-                );
-
-
-              output.textContent =
-                `HTTP ${response.status} • ${elapsed} ms\n\n${result}`;
-
-
-            } catch (error) {
-
-              output.textContent =
-                "Request failed: " +
-                error.message;
+              result = text;
 
             }
 
+
+            const elapsed =
+              Math.round(
+                performance.now() - start
+              );
+
+
+            output.textContent =
+              `HTTP ${response.status} • ${elapsed} ms\n\n${result}`;
+
+          } catch (error) {
+
+            output.textContent =
+              "Request failed: " +
+              error.message;
+
           }
-        );
+
+        };
 
       });
 
   }
 
 
-
-  /* ======================================================
+  /* =========================================================
      LOAD API
-     ====================================================== */
+     ========================================================= */
 
   async function load() {
 
@@ -980,12 +674,7 @@
 
 
       const response =
-        await fetch(
-          "/api",
-          {
-            cache: "no-store"
-          }
-        );
+        await fetch("/api");
 
 
       if (!response.ok) {
@@ -1007,52 +696,50 @@
           : [];
 
 
-      /* HOME STATS */
+      const total = $("#total");
+      const online = $("#online");
+      const time = $("#time");
 
-      if ($("#total")) {
 
-        $("#total").textContent =
+      if (total) {
+
+        total.textContent =
           apis.length;
 
       }
 
 
-      if ($("#online")) {
+      if (online) {
 
-        $("#online").textContent =
+        online.textContent =
           apis.length;
 
       }
 
 
-      if ($("#time")) {
+      if (time) {
 
-        $("#time").textContent =
+        time.textContent =
           Math.round(
-            performance.now() -
-            start
+            performance.now() - start
           ) + "ms";
 
       }
 
 
       renderHome(apis);
-
       renderDocs(apis);
 
 
     } catch (error) {
 
-      console.error(
-        "Yasam API:",
-        error
-      );
+      const grid = $("#grid");
+      const docs = $("#docs");
 
 
-      if ($("#grid")) {
+      if (grid) {
 
-        $("#grid").innerHTML = `
-
+        grid.innerHTML = `
           <div class="empty">
 
             Gagal memuat API.
@@ -1065,65 +752,34 @@
             </button>
 
           </div>
-
         `;
 
       }
 
 
-      if ($("#docs")) {
+      if (docs) {
 
-        $("#docs").innerHTML = `
-
+        docs.innerHTML = `
           <div class="empty">
-
             Gagal memuat dokumentasi.
-
           </div>
-
         `;
 
       }
 
-
-      if ($("#side")) {
-
-        $("#side").innerHTML = `
-
-          <div class="side-empty">
-
-            Gagal memuat API.
-
-          </div>
-
-        `;
-
-      }
-
-
-      if ($("#mobileSide")) {
-
-        $("#mobileSide").innerHTML = `
-
-          <div class="side-empty">
-
-            Gagal memuat API.
-
-          </div>
-
-        `;
-
-      }
+      console.error(
+        "Yasam API:",
+        error
+      );
 
     }
 
   }
 
 
-
-  /* ======================================================
-     SEARCH DESKTOP
-     ====================================================== */
+  /* =========================================================
+     SEARCH
+     ========================================================= */
 
   const search =
     $("#search");
@@ -1133,7 +789,7 @@
 
     search.addEventListener(
       "input",
-      event => {
+      (event) => {
 
         filter(
           event.target.value
@@ -1145,35 +801,9 @@
   }
 
 
-
-  /* ======================================================
-     SEARCH MOBILE
-     ====================================================== */
-
-  const mobileSearch =
-    $("#mobileSearch");
-
-
-  if (mobileSearch) {
-
-    mobileSearch.addEventListener(
-      "input",
-      event => {
-
-        filter(
-          event.target.value
-        );
-
-      }
-    );
-
-  }
-
-
-
-  /* ======================================================
+  /* =========================================================
      YEAR
-     ====================================================== */
+     ========================================================= */
 
   const year =
     $("#year");
@@ -1187,13 +817,11 @@
   }
 
 
+  /* =========================================================
+     INITIALIZE
+     ========================================================= */
 
-  /* ======================================================
-     INIT
-     ====================================================== */
-
-  initTheme();
-
+  theme();
   load();
 
 
