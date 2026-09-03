@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SamApi — REST API Hub</title>
+<meta name="description" content="SamApi, kumpulan REST API gratis: downloader, search, dan lainnya." />
+<link rel="icon" href="data:," />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="bg-decor" aria-hidden="true"></div>
+
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="/" class="brand">
+      <span class="brand-icon">⚡</span>
+      <span class="brand-name">Sam<span class="accent">Api</span></span>
+    </a>
+
+    <div class="nav-right">
+      <span class="status-pill" id="statusPill">
+        <span class="dot" id="statusDot"></span>
+        <span id="statusText">Checking...</span>
+      </span>
+      <a href="/docs.html" class="nav-link">Documentation</a>
+      <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">
+        <span id="themeIcon">🌙</span>
+      </button>
+      <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/docs.html">Documentation</a>
+    <a href="#endpoints">Explore API</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <span class="hero-badge">🚀 Free &amp; Open REST API</span>
+    <h1>Bangun proyekmu lebih cepat dengan <span class="accent">SamApi</span></h1>
+    <p class="hero-desc">
+      Kumpulan REST API gratis siap pakai — downloader, search, dan banyak lagi.
+      Tinggal panggil endpoint, dapatkan hasil JSON. Tanpa ribet, tanpa API key rumit.
+    </p>
+    <div class="hero-actions">
+      <a href="#endpoints" class="btn btn-primary">Explore API</a>
+      <a href="/docs.html" class="btn btn-outline">Documentation</a>
+    </div>
+  </div>
+</header>
+
+<section class="stats" id="stats">
+  <div class="stat-card">
+    <div class="stat-value" id="statTotal">–</div>
+    <div class="stat-label">Total API</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" id="statOnline">–</div>
+    <div class="stat-label">API Online</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" id="statResponse">–</div>
+    <div class="stat-label">Response Time</div>
+  </div>
+</section>
+
+<section class="endpoints-section" id="endpoints">
+  <div class="section-head">
+    <h2>Daftar Endpoint</h2>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Cari endpoint... (mis. instagram, tiktok)" />
+    </div>
+  </div>
+
+  <div class="category-tabs" id="categoryTabs"></div>
+
+  <div class="endpoint-grid" id="endpointGrid">
+    <div class="loading-card">Memuat daftar endpoint...</div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="brand-icon">⚡</span> Sam<span class="accent">Api</span>
+    </div>
+    <p>Dibuat dengan ❤️ — REST API sederhana untuk semua kebutuhanmu.</p>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/docs.html">Documentation</a>
+      <a href="/api">Raw JSON</a>
+    </div>
+    <p class="footer-copy">&copy; <span id="year"></span> SamApi. All rights reserved.</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
