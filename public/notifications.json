@@ -1,0 +1,10 @@
+{
+  "notifications": [
+    {
+      "id": 1,
+      "type": "info",
+      "message": "Selamat datang di SamApi! Cek dokumentasi untuk mulai menggunakan API.",
+      "active": true
+    }
+  ]
+}
