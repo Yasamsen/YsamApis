@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Status — SamApi</title>
+<meta name="description" content="Current operational status of SamApi services." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a0b0d'/%3E%3Cpath d='M9 21 V11 h6a4 4 0 0 1 0 8H12' stroke='%234e7fff' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body data-page="status">
+<div class="bg-field"></div>
+
+<header class="navbar">
+  <div class="container">
+    <a href="/" class="brand"><span class="brand-mark">S</span>SamApi</a>
+    <nav class="nav-links" aria-label="Navigasi utama">
+      <a href="/">APIs</a>
+      <a href="/docs">Documentation</a>
+      <a href="/status" class="active">Status</a>
+      <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+    <div class="nav-right">
+      <span class="status-pill"><span class="dot"></span>API Online</span>
+      <button class="icon-btn" data-theme-toggle type="button" aria-label="Ganti tema"></button>
+      <button class="icon-btn hamburger" data-hamburger type="button" aria-label="Buka menu" aria-expanded="false"></button>
+    </div>
+  </div>
+</header>
+
+<div class="nav-drawer" data-nav-drawer>
+  <a href="/">APIs</a>
+  <a href="/docs">Documentation</a>
+  <a href="/status">Status</a>
+  <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+</div>
+
+<main>
+  <section class="status-hero">
+    <div class="container">
+      <span class="badge"><span class="dot"></span>Last checked just now</span>
+      <h1>SamApi Status</h1>
+      <p class="status-ok" style="justify-content:center;margin-top:14px;font-size:15px">
+        <span class="dot"></span> All Systems Operational
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container" style="max-width:720px">
+      <div class="status-list">
+        <div class="status-row">
+          <span>API Gateway</span>
+          <span class="status-ok"><span class="dot"></span>Operational</span>
+        </div>
+        <div class="status-row">
+          <span>Downloader APIs</span>
+          <span class="status-ok"><span class="dot"></span>Operational</span>
+        </div>
+        <div class="status-row">
+          <span>Search APIs</span>
+          <span class="status-ok"><span class="dot"></span>Operational</span>
+        </div>
+        <div class="status-row">
+          <span>Documentation</span>
+          <span class="status-ok"><span class="dot"></span>Operational</span>
+        </div>
+      </div>
+      <p style="color:var(--text-faint);font-size:12.5px;margin-top:18px;text-align:center">
+        Halaman status ini adalah konfigurasi demo, belum terhubung ke sistem monitoring real-time.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2026 SamApi</span>
+      <span>Built for developers.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/script.js"></script>
+</body>
+</html>
