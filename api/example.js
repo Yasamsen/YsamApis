@@ -10,6 +10,7 @@ handler.api = {
   name: 'Example API',
   description: 'Simple health-check example endpoint.',
   method: 'GET',
+  category: 'Other',
   endpoint: '/api/example',
   parameters: []
 };
