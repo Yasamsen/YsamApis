@@ -9,8 +9,10 @@
   "scripts": {
     "build": "node scripts/generate-manifest.js"
   },
-  "dependencies": {
-    "@hiudyy/ytdl": "latest",
+  ""dependencies": {
+  "cheerio": "^1.0.0",
+  "node-fetch": "^3.3.2",
+  "@hiudyy/ytdl": "latest",
     "axios": "^1.7.9",
     "express": "^4.21.2"
   }
