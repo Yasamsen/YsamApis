@@ -467,7 +467,7 @@ module.exports = createApi({
 
   endpoint: "/api/downloader/capcut",
 
-  category: "Scraper",
+  category: "downloader",
 
   parameters: [
     {
