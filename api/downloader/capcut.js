@@ -458,7 +458,7 @@ async function scrapeCapcut(inputUrl) {
  */
 
 module.exports = createApi({
-  name: "CapCut",
+  name: "CapCut Scraper",
 
   description:
     "Scrape metadata dan video dari URL template CapCut.",
