@@ -4,117 +4,44 @@ const axios = require("axios");
 const createApi = require("../_lib/createApi");
 const { requireParams } = require("../_lib/validate");
 
-/*
- * API BMKG
- */
 const BMKG_API =
   "https://api.bmkg.go.id/publik/prakiraan-cuaca";
 
 /*
- * Daftar kode cuaca BMKG.
+ * Daftar kode provinsi dan kota/kabupaten penting.
  *
- * 0  = Cerah
- * 1  = Cerah Berawan
- * 2  = Cerah Berawan
- * 3  = Berawan
- * 4  = Berawan Tebal
- * 5  = Udara Kabur
- * 10 = Asap
- * 45 = Kabut
- * 60 = Hujan Ringan
- * 61 = Hujan Sedang
- * 63 = Hujan Lebat
- * 80 = Hujan Lokal
- * 95 = Hujan Petir
- * 97 = Hujan Petir
+ * Untuk Kota Bandung:
+ * Jawa Barat = 32
+ * Kota Bandung = 32.73
  */
-const WEATHER_CODES = {
-  0: "Cerah",
-  1: "Cerah Berawan",
-  2: "Cerah Berawan",
-  3: "Berawan",
-  4: "Berawan Tebal",
-  5: "Udara Kabur",
-  10: "Asap",
-  45: "Kabut",
-  60: "Hujan Ringan",
-  61: "Hujan Sedang",
-  63: "Hujan Lebat",
-  80: "Hujan Lokal",
-  95: "Hujan Petir",
-  97: "Hujan Petir"
+const REGION_CODES = {
+  "jawa barat": {
+    "kota bandung": "32.73",
+    "bandung": "32.73"
+  }
 };
 
 
 /*
- * Normalisasi text untuk pencarian.
+ * Normalisasi nama wilayah.
  */
 function normalizeText(text) {
   return String(text || "")
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\bprovinsi\b/g, "")
+    .replace(/\bkota\b/g, "kota")
+    .replace(/\bkabupaten\b/g, "kabupaten")
     .replace(/\s+/g, " ")
     .trim();
 }
 
 
 /*
- * Mengambil data wilayah BMKG.
- *
- * File wilayah BMKG berisi kode adm4,
- * provinsi, kota/kabupaten, kecamatan,
- * dan desa/kelurahan.
+ * Cari kode adm2.
  */
-async function getRegions() {
-  const urls = [
-    "https://raw.githubusercontent.com/infoBMKG/data-cuaca/master/adm4.json",
-    "https://raw.githubusercontent.com/infoBMKG/data-cuaca/master/adm4/adm4.json"
-  ];
-
-  for (const url of urls) {
-    try {
-      const response = await axios.get(url, {
-        timeout: 10000
-      });
-
-      if (Array.isArray(response.data)) {
-        return response.data;
-      }
-
-      if (
-        response.data &&
-        typeof response.data === "object"
-      ) {
-        /*
-         * Beberapa format bisa berupa object.
-         */
-        const values =
-          Object.values(response.data);
-
-        if (values.length) {
-          return values;
-        }
-      }
-    } catch (_) {}
-  }
-
-  return [];
-}
-
-
-/*
- * Cari wilayah berdasarkan provinsi + kota.
- */
-async function findRegion(provinsi, kota) {
-  const regions =
-    await getRegions();
-
-  if (!regions.length) {
-    return null;
-  }
-
+function findAdm2(provinsi, kota) {
   const province =
     normalizeText(provinsi);
 
@@ -122,183 +49,317 @@ async function findRegion(provinsi, kota) {
     normalizeText(kota);
 
   /*
-   * Exact match terlebih dahulu.
+   * Exact.
    */
-  let result = regions.find(item => {
-    const itemProvince =
-      normalizeText(
-        item.province ||
-        item.provinsi ||
-        item.province_name
-      );
-
-    const itemCity =
-      normalizeText(
-        item.city ||
-        item.kota ||
-        item.kabupaten ||
-        item.city_name
-      );
-
-    return (
-      itemProvince === province &&
-      itemCity === city
-    );
-  });
-
-  if (result) {
-    return result;
+  if (
+    REGION_CODES[province] &&
+    REGION_CODES[province][city]
+  ) {
+    return REGION_CODES[province][city];
   }
 
   /*
    * Partial match.
    */
-  result = regions.find(item => {
-    const itemProvince =
-      normalizeText(
-        item.province ||
-        item.provinsi ||
-        item.province_name
-      );
-
-    const itemCity =
-      normalizeText(
-        item.city ||
-        item.kota ||
-        item.kabupaten ||
-        item.city_name
-      );
-
-    return (
-      itemProvince.includes(province) &&
-      itemCity.includes(city)
+  const provinceData =
+    Object.entries(
+      REGION_CODES
+    ).find(([name]) =>
+      name.includes(province) ||
+      province.includes(name)
     );
-  });
 
-  return result || null;
+  if (!provinceData) {
+    return null;
+  }
+
+  const cities =
+    provinceData[1];
+
+  const cityData =
+    Object.entries(cities)
+      .find(([name]) =>
+        name.includes(city) ||
+        city.includes(name)
+      );
+
+  return cityData
+    ? cityData[1]
+    : null;
 }
 
 
 /*
- * Konversi kode cuaca BMKG.
+ * Mendapatkan daftar adm4
+ * berdasarkan kode adm2.
+ *
+ * Sumber kode wilayah:
+ * Kepmendagri / data wilayah Indonesia.
+ *
+ * Kita gunakan dataset terbuka untuk
+ * mendapatkan desa/kelurahan yang
+ * berada di dalam kota tersebut.
  */
-function weatherDescription(code) {
-  const numericCode =
-    Number(code);
+async function getAdm4ByAdm2(adm2) {
+  const url =
+    "https://raw.githubusercontent.com/yonatanyl/KODE-WILAYAH-KEPMENDAGRI-2025/main/KEPMENDAGRI%202025_PUBLIC_GITHUB.csv";
 
-  return (
-    WEATHER_CODES[numericCode] ||
-    "Kondisi Cuaca Tidak Diketahui"
-  );
+  try {
+    const response =
+      await axios.get(url, {
+        timeout: 15000,
+        responseType: "text"
+      });
+
+    const csv =
+      String(response.data || "");
+
+    const lines =
+      csv.split(/\r?\n/);
+
+    if (lines.length < 2) {
+      return [];
+    }
+
+    /*
+     * Parser CSV sederhana.
+     */
+    function parseCSVLine(line) {
+      const result = [];
+      let current = "";
+      let quoted = false;
+
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+
+        if (char === '"') {
+          quoted = !quoted;
+          continue;
+        }
+
+        if (char === "," && !quoted) {
+          result.push(
+            current.trim()
+          );
+          current = "";
+        } else {
+          current += char;
+        }
+      }
+
+      result.push(
+        current.trim()
+      );
+
+      return result;
+    }
+
+    const header =
+      parseCSVLine(lines[0])
+        .map(x =>
+          x
+            .toUpperCase()
+            .trim()
+        );
+
+    const provinceIndex =
+      header.indexOf(
+        "KODE PROVINSI"
+      );
+
+    const cityIndex =
+      header.indexOf(
+        "KODE KABUPATEN"
+      );
+
+    const villageIndex =
+      header.findIndex(x =>
+        x.includes(
+          "KODE DESA"
+        )
+      );
+
+    if (
+      cityIndex === -1 ||
+      villageIndex === -1
+    ) {
+      return [];
+    }
+
+    const result = [];
+
+    for (
+      let i = 1;
+      i < lines.length;
+      i++
+    ) {
+      if (!lines[i].trim()) {
+        continue;
+      }
+
+      const row =
+        parseCSVLine(lines[i]);
+
+      const cityCode =
+        String(
+          row[cityIndex] || ""
+        ).trim();
+
+      if (
+        cityCode !== adm2
+      ) {
+        continue;
+      }
+
+      const adm4 =
+        String(
+          row[villageIndex] || ""
+        ).trim();
+
+      if (
+        /^\d{2}\.\d{2}\.\d{2}\.\d{4}$/
+          .test(adm4)
+      ) {
+        result.push(adm4);
+      }
+    }
+
+    return [
+      ...new Set(result)
+    ];
+
+  } catch (error) {
+    console.error(
+      "GET ADM4 ERROR:",
+      error.message
+    );
+
+    return [];
+  }
 }
 
 
 /*
- * Parse data prakiraan BMKG.
+ * Ambil prakiraan BMKG.
  */
-function parseForecast(data) {
-  const result = [];
+async function getWeather(adm4) {
+  const response =
+    await axios.get(
+      BMKG_API,
+      {
+        params: {
+          adm4
+        },
 
-  /*
-   * Struktur API BMKG:
-   *
-   * data -> []
-   * setiap item memiliki:
-   * lokasi
-   * cuaca
-   */
+        timeout: 15000,
 
+        headers: {
+          "User-Agent":
+            "SamApi/1.0",
+
+          Accept:
+            "application/json"
+        }
+      }
+    );
+
+  return response.data;
+}
+
+
+/*
+ * Parse data cuaca.
+ */
+function parseWeather(data) {
   const lokasi =
     data?.lokasi || {};
 
-  const forecasts =
-    Array.isArray(data?.data)
-      ? data.data
-      : [];
+  const forecast = [];
 
   /*
-   * Format API BMKG terbaru biasanya:
+   * Struktur BMKG:
    *
-   * data:
-   * [
-   *   {
-   *     lokasi: {...},
-   *     cuaca: [
-   *       [...]
-   *     ]
-   *   }
-   * ]
-   *
-   * Karena itu kita dukung array bertingkat.
+   * data[0].cuaca[0]
+   * data[0].cuaca[1]
+   * dst.
    */
-  for (const group of forecasts) {
-    const weatherGroups =
-      Array.isArray(group?.cuaca)
-        ? group.cuaca
-        : [];
+  const groups =
+    Array.isArray(
+      data?.data?.[0]?.cuaca
+    )
+      ? data.data[0].cuaca
+      : [];
 
-    for (const weatherGroup of weatherGroups) {
-      const items =
-        Array.isArray(weatherGroup)
-          ? weatherGroup
-          : [weatherGroup];
+  for (const group of groups) {
+    const items =
+      Array.isArray(group)
+        ? group
+        : [group];
 
-      for (const item of items) {
-        if (!item) continue;
-
-        const weatherCode =
-          Number(item.weather ?? 0);
-
-        result.push({
-          utcDatetime:
-            item.utc_datetime || "",
-
-          localDatetime:
-            item.local_datetime || "",
-
-          temperature:
-            Number(item.t ?? 0),
-
-          humidity:
-            Number(item.hu ?? 0),
-
-          weatherCode,
-
-          weather:
-            item.weather_desc ||
-            weatherDescription(
-              weatherCode
-            ),
-
-          weatherEnglish:
-            item.weather_desc_en || "",
-
-          windSpeed:
-            Number(item.ws ?? 0),
-
-          windDirection:
-            item.wd || "",
-
-          cloudCover:
-            Number(item.tcc ?? 0),
-
-          visibility:
-            item.vs_text || "",
-
-          analysisDate:
-            item.analysis_date || ""
-        });
+    for (const item of items) {
+      if (!item) {
+        continue;
       }
+
+      const weatherCode =
+        Number(
+          item.weather
+        );
+
+      forecast.push({
+        utcDatetime:
+          item.utc_datetime || "",
+
+        localDatetime:
+          item.local_datetime || "",
+
+        temperature:
+          Number(item.t || 0),
+
+        humidity:
+          Number(item.hu || 0),
+
+        weatherCode,
+
+        weather:
+          item.weather_desc ||
+          "Tidak diketahui",
+
+        weatherEnglish:
+          item.weather_desc_en ||
+          "",
+
+        windSpeed:
+          Number(item.ws || 0),
+
+        windDirection:
+          item.wd || "",
+
+        cloudCover:
+          Number(item.tcc || 0),
+
+        visibility:
+          item.vs_text || "",
+
+        analysisDate:
+          item.analysis_date || "",
+
+        image:
+          item.image || ""
+      });
     }
   }
 
   return {
     lokasi,
-    forecast: result
+    forecast
   };
 }
 
 
+/*
+ * API
+ */
 module.exports = createApi({
   name: "Weather",
 
@@ -338,7 +399,7 @@ module.exports = createApi({
 
   async handler(req, res) {
     /*
-     * Validasi parameter.
+     * Validasi.
      */
     const check =
       requireParams(
@@ -379,20 +440,20 @@ module.exports = createApi({
 
     try {
       /*
-       * Cari kode wilayah BMKG.
+       * Cari adm2.
        */
-      const region =
-        await findRegion(
+      const adm2 =
+        findAdm2(
           provinsi,
           kota
         );
 
-      if (!region) {
+      if (!adm2) {
         return res.status(404).json({
           success: false,
 
           message:
-            "Wilayah tidak ditemukan.",
+            "Provinsi atau kota belum tersedia di database wilayah SamApi.",
 
           detail: {
             provinsi,
@@ -402,83 +463,90 @@ module.exports = createApi({
       }
 
       /*
-       * Ambil adm4.
+       * Cari seluruh adm4
+       * dalam kota/kabupaten.
        */
-      const adm4 =
-        String(
-          region.adm4 ||
-          region.kode ||
-          region.kode_wilayah ||
-          region.code ||
-          ""
+      const adm4List =
+        await getAdm4ByAdm2(
+          adm2
         );
 
-      if (!adm4) {
-        return res.status(500).json({
+      if (!adm4List.length) {
+        return res.status(404).json({
           success: false,
 
           message:
-            "Kode wilayah BMKG tidak ditemukan."
+            "Kode desa/kelurahan BMKG untuk kota tersebut tidak ditemukan.",
+
+          detail: {
+            adm2,
+            provinsi,
+            kota
+          }
         });
       }
 
       /*
-       * Request ke API resmi BMKG.
+       * Ambil satu titik prakiraan.
+       *
+       * Karena parameter API hanya
+       * provinsi + kota, kita gunakan
+       * adm4 pertama sebagai titik
+       * representatif kota.
        */
-      const response =
-        await axios.get(
-          BMKG_API,
-          {
-            params: {
+      let weatherData = null;
+      let selectedAdm4 = null;
+
+      for (const adm4 of adm4List) {
+        try {
+          const data =
+            await getWeather(
               adm4
-            },
+            );
 
-            timeout: 15000,
-
-            headers: {
-              "User-Agent":
-                "SamApi/1.0",
-
-              Accept:
-                "application/json"
-            }
+          if (
+            data?.lokasi &&
+            Array.isArray(
+              data?.data?.[0]?.cuaca
+            )
+          ) {
+            weatherData = data;
+            selectedAdm4 = adm4;
+            break;
           }
-        );
+        } catch (_) {}
+      }
 
-      if (!response.data) {
+      if (!weatherData) {
         return res.status(502).json({
           success: false,
 
           message:
-            "BMKG tidak mengembalikan data."
+            "BMKG tidak mengembalikan data cuaca untuk wilayah tersebut."
         });
       }
 
       /*
-       * Parse prakiraan.
+       * Parse.
        */
       const parsed =
-        parseForecast(
-          response.data
+        parseWeather(
+          weatherData
         );
 
-      /*
-       * Pastikan ada data cuaca.
-       */
       if (
-        !parsed.forecast ||
         !parsed.forecast.length
       ) {
         return res.status(404).json({
           success: false,
 
           message:
-            "Data prakiraan cuaca tidak tersedia untuk wilayah tersebut."
+            "Data prakiraan cuaca kosong."
         });
       }
 
       /*
-       * Response API.
+       * Response.
        */
       return res.status(200).json({
         success: true,
@@ -486,32 +554,38 @@ module.exports = createApi({
         data: {
           location: {
             provinsi:
-              parsed.lokasi?.provinsi ||
-              region.province ||
-              region.provinsi ||
+              parsed.lokasi.provinsi ||
               provinsi,
 
             kota:
-              parsed.lokasi?.kotkab ||
-              parsed.lokasi?.kota ||
-              region.city ||
-              region.kota ||
-              region.kabupaten ||
+              parsed.lokasi.kotkab ||
               kota,
 
             kecamatan:
-              parsed.lokasi?.kecamatan ||
-              region.district ||
-              region.kecamatan ||
+              parsed.lokasi.kecamatan ||
               "",
 
             desa:
-              parsed.lokasi?.desa ||
-              region.village ||
-              region.desa ||
+              parsed.lokasi.desa ||
               "",
 
-            adm4
+            latitude:
+              Number(
+                parsed.lokasi.lat || 0
+              ),
+
+            longitude:
+              Number(
+                parsed.lokasi.lon || 0
+              ),
+
+            timezone:
+              parsed.lokasi.timezone ||
+              "",
+
+            adm4:
+              parsed.lokasi.adm4 ||
+              selectedAdm4
           },
 
           forecast:
@@ -529,7 +603,17 @@ module.exports = createApi({
       );
 
       const status =
-        error.response?.status || 500;
+        error.response?.status ||
+        500;
+
+      if (status === 400) {
+        return res.status(400).json({
+          success: false,
+
+          message:
+            "Parameter BMKG tidak valid."
+        });
+      }
 
       if (status === 404) {
         return res.status(404).json({
