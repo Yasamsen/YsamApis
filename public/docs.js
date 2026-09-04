@@ -156,9 +156,11 @@
             <div class="response-tabs">
               <button class="response-tab is-active" data-tab="body">Body</button>
               <button class="response-tab" data-tab="headers">Headers</button>
+              <button class="response-tab" data-tab="preview" style="display:none;">Preview</button>
             </div>
             <div class="response-body" data-tab-panel="body"></div>
             <div class="response-body" data-tab-panel="headers" style="display:none;"></div>
+            <div class="response-preview" data-tab-panel="preview" style="display:none;"></div>
             <div class="response-actions">
               <button class="btn btn--ghost btn--sm" data-copy-response>Copy Response</button>
               <button class="btn btn--ghost btn--sm" data-clear-response>Clear</button>
@@ -280,6 +282,145 @@
     return { valid, values };
   }
 
+  function safeMediaUrl(value) {
+    if (typeof value !== "string" || !value.trim()) return "";
+    try {
+      const url = new URL(value, window.location.origin);
+      if (url.protocol !== "http:" && url.protocol !== "https:") return "";
+      return url.href;
+    } catch (err) {
+      return "";
+    }
+  }
+
+  function collectMedia(payload) {
+    const media = { images: [], videos: [] };
+    const imageKeys = new Set([
+      "coverUrl", "cover", "thumbnail", "thumbnailUrl", "poster",
+      "image", "imageUrl", "image_url", "photo", "photoUrl", "pic",
+      "picture", "avatar"
+    ]);
+    const videoKeys = new Set([
+      "videoUrl", "video", "video_url", "playUrl", "play_url",
+      "downloadUrl", "download_url", "mediaUrl", "media_url"
+    ]);
+    const seen = new Set();
+
+    function add(list, value) {
+      const url = safeMediaUrl(value);
+      if (url && !list.includes(url)) list.push(url);
+    }
+
+    function walk(value, depth) {
+      if (!value || depth > 8) return;
+      if (typeof value !== "object") return;
+      if (seen.has(value)) return;
+      seen.add(value);
+
+      if (Array.isArray(value)) {
+        value.forEach(item => walk(item, depth + 1));
+        return;
+      }
+
+      Object.entries(value).forEach(([key, val]) => {
+        const lower = key.toLowerCase();
+        if (typeof val === "string") {
+          if (imageKeys.has(key) || lower.includes("imageurl") || lower === "image_url") {
+            add(media.images, val);
+          } else if (videoKeys.has(key) || lower.includes("videourl") || lower === "video_url") {
+            add(media.videos, val);
+          }
+        } else if (val && typeof val === "object") {
+          walk(val, depth + 1);
+        }
+      });
+    }
+
+    walk(payload, 0);
+
+    return media;
+  }
+
+  function buildPreviewHtml(payload) {
+    const data = payload && typeof payload === "object"
+      ? (payload.data && typeof payload.data === "object" ? payload.data : payload)
+      : {};
+
+    const media = collectMedia(payload);
+    const title = typeof data.title === "string" ? data.title : "Media Preview";
+    const description = typeof data.description === "string"
+      ? data.description
+      : (typeof data.desc === "string" ? data.desc : "");
+    const hashtags = Array.isArray(data.hashtags) ? data.hashtags : [];
+
+    if (!media.images.length && !media.videos.length) {
+      return "";
+    }
+
+    const imageHtml = media.images.length
+      ? media.images.slice(0, 4).map((url, index) => `
+          <div class="media-preview__item">
+            <img
+              class="media-preview__image"
+              src="${escapeHtml(url)}"
+              alt="${escapeHtml(title || "Preview Image")}" 
+              loading="lazy"
+              onerror="this.closest('.media-preview__item').remove()"
+            >
+            <a class="btn btn--primary btn--sm media-preview__download"
+              href="${escapeHtml(url)}"
+              target="_blank"
+              rel="noopener noreferrer"
+              download>
+              Download Image${media.images.length > 1 ? ` ${index + 1}` : ""}
+            </a>
+          </div>
+        `).join("")
+      : "";
+
+    const videoHtml = media.videos.length
+      ? media.videos.slice(0, 4).map((url, index) => `
+          <div class="media-preview__item">
+            <video
+              class="media-preview__video"
+              controls
+              preload="metadata"
+              playsinline
+              poster="${escapeHtml(media.images[0] || "")}"
+              src="${escapeHtml(url)}">
+              Browser kamu tidak mendukung pemutar video.
+            </video>
+            <a class="btn btn--primary btn--sm media-preview__download"
+              href="${escapeHtml(url)}"
+              target="_blank"
+              rel="noopener noreferrer"
+              download>
+              Download Video${media.videos.length > 1 ? ` ${index + 1}` : ""}
+            </a>
+          </div>
+        `).join("")
+      : "";
+
+    return `
+      <div class="media-preview">
+        ${imageHtml ? `<div class="media-preview__section"><div class="media-preview__eyebrow">Images</div><div class="media-preview__grid">${imageHtml}</div></div>` : ""}
+        ${videoHtml ? `<div class="media-preview__section"><div class="media-preview__eyebrow">Videos</div><div class="media-preview__grid">${videoHtml}</div></div>` : ""}
+
+        ${(title || description || hashtags.length) ? `
+          <div class="media-preview__info">
+            <div>
+              ${title ? `<h4>${escapeHtml(title)}</h4>` : ""}
+              ${description ? `<p>${escapeHtml(description)}</p>` : ""}
+              ${hashtags.length
+                ? `<div class="preview-tags">${hashtags.map(tag => `<span>#${escapeHtml(String(tag))}</span>`).join("")}</div>`
+                : ""}
+            </div>
+          </div>
+        ` : ""}
+      </div>
+    `;
+  }
+
   async function sendRequest(tryPanel) {
     const method = tryPanel.getAttribute("data-method");
     const endpoint = tryPanel.getAttribute("data-endpoint");
@@ -289,6 +430,7 @@
     const timeEl = tryPanel.querySelector("[data-response-time]");
     const bodyPanel = tryPanel.querySelector('[data-tab-panel="body"]');
     const headersPanel = tryPanel.querySelector('[data-tab-panel="headers"]');
+    const previewPanel = tryPanel.querySelector('[data-tab-panel="preview"]');
 
     let url = endpoint;
     let fetchOptions = { method, headers: {} };
@@ -338,6 +480,12 @@
       timeEl.textContent = `${elapsed} ms`;
       bodyPanel.innerHTML = highlightJson(parsedBody);
       headersPanel.innerHTML = highlightJson(headersObj);
+      if (previewPanel) {
+        const previewHtml = buildPreviewHtml(parsedBody);
+        previewPanel.innerHTML = previewHtml;
+        const previewTab = tryPanel.querySelector('.response-tab[data-tab="preview"]');
+        if (previewTab) previewTab.style.display = previewHtml ? "" : "none";
+      }
       tryPanel.dataset.lastResponse = typeof parsedBody === "string" ? parsedBody : JSON.stringify(parsedBody, null, 2);
     } catch (err) {
       const elapsed = Math.round(performance.now() - startedAt);
@@ -345,8 +493,14 @@
       statusEl.textContent = "Network Error";
       statusEl.className = "status-pill status-pill--err";
       timeEl.textContent = `${elapsed} ms`;
-      bodyPanel.innerHTML = highlightJson({ success: false, message: "Tidak dapat menghubungi server. Periksa koneksi internet Anda." });
+      const networkError = { success: false, message: "Tidak dapat menghubungi server. Periksa koneksi internet Anda." };
+      bodyPanel.innerHTML = highlightJson(networkError);
       headersPanel.innerHTML = "";
+      if (previewPanel) {
+        previewPanel.innerHTML = "";
+        const previewTab = tryPanel.querySelector('.response-tab[data-tab="preview"]');
+        if (previewTab) previewTab.style.display = "none";
+      }
       tryPanel.dataset.lastResponse = "";
     } finally {
       sendBtn.disabled = false;
@@ -366,6 +520,10 @@
       if (clearBtn) {
         const tryPanel = clearBtn.closest("[data-try-panel]");
         tryPanel.querySelector("[data-response-panel]").style.display = "none";
+        const preview = tryPanel.querySelector('[data-tab-panel="preview"]');
+        if (preview) preview.innerHTML = "";
+        const previewTab = tryPanel.querySelector('.response-tab[data-tab="preview"]');
+        if (previewTab) previewTab.style.display = "none";
         return;
       }
 
