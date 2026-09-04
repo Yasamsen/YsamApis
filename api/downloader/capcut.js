@@ -1,5 +1,4 @@
-// api/downloader/capcut.js
-
+// api/scraper/capcut.js
 const axios = require("axios");
 const createApi = require("../_lib/createApi");
 const { requireParams } = require("../_lib/validate");
@@ -7,249 +6,256 @@ const { requireParams } = require("../_lib/validate");
 function extractHashtags(text) {
   if (!text) return [];
 
-  const matches = text.match(/#[\p{L}\p{N}_]+/gu) || [];
+  const matches = text.match(/#[\w\u0590-\u05ff]+/gi) || [];
 
-  return [...new Set(
-    matches.map(tag => tag.slice(1))
-  )];
+  return [...new Set(matches)];
 }
 
-function decodeValue(value) {
-  if (!value) return "";
+function getRegex(html, regex) {
+  const match = html.match(regex);
 
-  try {
-    return value
-      .replace(/\\u002F/g, "/")
-      .replace(/\\"/g, '"')
-      .replace(/\\\\/g, "\\");
-  } catch {
-    return value;
+  if (!match || !match[1]) return "";
+
+  return match[1]
+    .replace(/\\u002F/g, "/")
+    .replace(/\\"/g, '"');
+}
+
+function getNum(html, regex) {
+  const match = html.match(regex);
+
+  return parseInt(match?.[1] || "0", 10);
+}
+
+async function scrapeCapcut(inputUrl) {
+  if (!inputUrl || !inputUrl.includes("capcut.com")) {
+    return {
+      success: false,
+      error: "URL CapCut tidak valid."
+    };
   }
-}
 
-function getString(html, regex) {
-  const match = html.match(regex);
-  return decodeValue(match?.[1] || "");
-}
+  const response = await axios.get(inputUrl, {
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36",
+      "Accept-Language": "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7",
+      "Accept":
+        "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"
+    },
+    timeout: 15000,
+    maxRedirects: 5
+  });
 
-function getNumber(html, regex) {
-  const match = html.match(regex);
+  const html = response.data;
 
-  if (!match?.[1]) return 0;
+  let templateData = null;
+  let loaderObj = null;
 
-  const number = Number(match[1]);
-
-  return Number.isFinite(number) ? number : 0;
-}
-
-function findLoaderData(html) {
   const scripts = [
-    ...html.matchAll(
-      /<script[^>]*>([\s\S]*?)<\/script>/gi
-    )
+    ...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)
   ];
 
   for (const script of scripts) {
-    const content = script[1];
-
-    if (!content || !content.includes("loaderData")) {
-      continue;
-    }
+    if (!script[1].includes("loaderData")) continue;
 
     try {
-      const parsed = JSON.parse(content);
+      const parsed = JSON.parse(script[1]);
 
-      const loader =
+      loaderObj =
         parsed.loaderData?.["template-detail_$"] ||
         parsed.loaderData?.["template_detail"];
 
-      if (loader) {
-        return loader;
+      if (loaderObj?.templateDetail) {
+        templateData = loaderObj.templateDetail;
+        break;
       }
-    } catch {
+    } catch (_) {
       // Lanjut ke script berikutnya
     }
   }
 
-  return null;
-}
+  /*
+   * FALLBACK REGEX
+   */
 
-function buildMetadataFromRegex(html, inputUrl) {
-  const videoUrl = getString(
-    html,
-    /"videoUrl"\s*:\s*"([^"]*)"/
-  );
+  if (!templateData) {
+    const videoUrl = getRegex(html, /"videoUrl":"(.*?)"/);
 
-  if (!videoUrl) {
-    return null;
+    if (!videoUrl) {
+      return {
+        success: false,
+        error: "Gagal mengekstrak metadata dari URL CapCut."
+      };
+    }
+
+    const coverUrl = getRegex(html, /"coverUrl":"(.*?)"/);
+    const title = getRegex(html, /"title":"(.*?)"/);
+    const desc = getRegex(html, /"desc":"(.*?)"/);
+    const templateId = getRegex(html, /"templateId":"(.*?)"/);
+
+    const width = getNum(
+      html,
+      /"videoWidth":([0-9]+)/
+    );
+
+    const height = getNum(
+      html,
+      /"videoHeight":([0-9]+)/
+    );
+
+    const duration = getNum(
+      html,
+      /"templateDuration":([0-9]+)/
+    );
+
+    const createTime = getNum(
+      html,
+      /"createTime":([0-9]+)/
+    );
+
+    return {
+      success: true,
+      data: {
+        id: templateId,
+
+        title: title || "CapCut Template",
+
+        description: desc || "",
+
+        hashtags: extractHashtags(desc),
+
+        originalUrl: inputUrl,
+
+        canonicalUrl: inputUrl,
+
+        coverUrl,
+
+        videoUrl,
+
+        videoWidth: width,
+
+        videoHeight: height,
+
+        videoRatio:
+          width && height
+            ? `${width}:${height}`
+            : "9:16",
+
+        durationMs: duration,
+
+        durationSec: Number(
+          (duration / 1000).toFixed(2)
+        ),
+
+        segmentCount: getNum(
+          html,
+          /"segmentAmount":([0-9]+)/
+        ),
+
+        usageCount: getNum(
+          html,
+          /"usageAmount":([0-9]+)/
+        ),
+
+        likeCount:
+          getNum(
+            html,
+            /"likeAmount":([0-9]+)/
+          ) ||
+          getNum(
+            html,
+            /"likeCount":([0-9]+)/
+          ),
+
+        playCount:
+          getNum(
+            html,
+            /"playAmount":([0-9]+)/
+          ) ||
+          getNum(
+            html,
+            /"playCount":([0-9]+)/
+          ),
+
+        commentCount: getNum(
+          html,
+          /"commentAmount":([0-9]+)/
+        ),
+
+        createdAt: createTime
+          ? new Date(createTime * 1000).toISOString()
+          : "",
+
+        createdTimestamp: createTime,
+
+        capabilities: [],
+
+        author: {
+          name: getRegex(
+            html,
+            /"author":\{.*?"name":"(.*?)"/
+          ),
+
+          avatarUrl: getRegex(
+            html,
+            /"avatarUrl":"(.*?)"/
+          )
+        }
+      }
+    };
   }
 
-  const coverUrl = getString(
-    html,
-    /"coverUrl"\s*:\s*"([^"]*)"/
+  /*
+   * DATA LOADER
+   */
+
+  const createTime = Number(
+    templateData.createTime || 0
   );
 
-  const title = getString(
-    html,
-    /"title"\s*:\s*"([^"]*)"/
+  const duration = Number(
+    templateData.templateDuration || 0
   );
 
-  const description = getString(
-    html,
-    /"desc"\s*:\s*"([^"]*)"/
-  );
+  /*
+   * RECOMMENDATION
+   */
 
-  const templateId = getString(
-    html,
-    /"templateId"\s*:\s*"([^"]*)"/
-  );
+  const rawRecommend = Array.isArray(
+    loaderObj?.recommendList
+  )
+    ? loaderObj.recommendList
+    : [];
 
-  const width = getNumber(
-    html,
-    /"videoWidth"\s*:\s*([0-9]+)/
-  );
-
-  const height = getNumber(
-    html,
-    /"videoHeight"\s*:\s*([0-9]+)/
-  );
-
-  const duration = getNumber(
-    html,
-    /"templateDuration"\s*:\s*([0-9]+)/
-  );
-
-  const createTime = getNumber(
-    html,
-    /"createTime"\s*:\s*([0-9]+)/
-  );
-
-  const segmentCount = getNumber(
-    html,
-    /"segmentAmount"\s*:\s*([0-9]+)/
-  );
-
-  const usageCount = getNumber(
-    html,
-    /"usageAmount"\s*:\s*([0-9]+)/
-  );
-
-  const likeCount =
-    getNumber(html, /"likeAmount"\s*:\s*([0-9]+)/) ||
-    getNumber(html, /"likeCount"\s*:\s*([0-9]+)/);
-
-  const playCount =
-    getNumber(html, /"playAmount"\s*:\s*([0-9]+)/) ||
-    getNumber(html, /"playCount"\s*:\s*([0-9]+)/);
-
-  const commentCount = getNumber(
-    html,
-    /"commentAmount"\s*:\s*([0-9]+)/
-  );
-
-  const authorName = getString(
-    html,
-    /"author"\s*:\s*\{[\s\S]*?"name"\s*:\s*"([^"]*)"/
-  );
-
-  const authorAvatar = getString(
-    html,
-    /"avatarUrl"\s*:\s*"([^"]*)"/
-  );
-
-  return {
-    id: templateId,
-    title: title || "CapCut Template",
-    description,
-    hashtags: extractHashtags(description),
-
-    coverUrl,
-    videoUrl,
-
-    videoWidth: width,
-    videoHeight: height,
-
-    videoRatio:
-      width && height
-        ? `${width}:${height}`
-        : "9:16",
-
-    durationMs: duration,
-    durationSec: Number(
-      (duration / 1000).toFixed(2)
-    ),
-
-    segmentCount,
-    usageCount,
-    likeCount,
-    playCount,
-    commentCount,
-
-    createdAt: createTime
-      ? new Date(createTime * 1000).toISOString()
-      : "",
-
-    createdTimestamp: createTime,
-
-    capabilities: [],
-
-    author: {
-      name: authorName,
-      avatarUrl: authorAvatar
-    },
-
-    originalUrl: inputUrl
-  };
-}
-
-function buildMetadataFromLoader(
-  templateData,
-  loaderObj,
-  inputUrl
-) {
-  if (!templateData) return null;
-
-  const createTime =
-    Number(templateData.createTime || 0);
-
-  const duration =
-    Number(templateData.templateDuration || 0);
-
-  const width =
-    Number(templateData.videoWidth || 0);
-
-  const height =
-    Number(templateData.videoHeight || 0);
-
-  const description =
-    templateData.desc || "";
-
-  const rawRecommend =
-    Array.isArray(loaderObj?.recommendList)
-      ? loaderObj.recommendList
-      : [];
-
-  const recommendList = rawRecommend.map(item => {
-    const itemCreateTime =
-      Number(item.createTime || 0);
+  const recommendList = rawRecommend.map((item) => {
+    const itemCreateTime = Number(
+      item.createTime || 0
+    );
 
     let author;
 
-    const hasAuthor = Boolean(
+    if (
       item.author?.name ||
       item.author?.avatarUrl ||
       item.author?.secUid
-    );
-
-    if (hasAuthor) {
+    ) {
       author = {
-        name: item.author?.name || "",
-        avatarUrl: item.author?.avatarUrl || "",
-        description: item.author?.description || "",
-        profileUrl: item.author?.profileUrl
-          ? `https://www.capcut.com${item.author.profileUrl}`
-          : "",
-        secUid: item.author?.secUid || ""
+        name: item.author?.name || undefined,
+
+        avatarUrl:
+          item.author?.avatarUrl || undefined,
+
+        description:
+          item.author?.description || undefined,
+
+        profileUrl:
+          item.author?.profileUrl
+            ? `https://www.capcut.com${item.author.profileUrl}`
+            : undefined,
+
+        secUid:
+          item.author?.secUid || undefined
       };
     }
 
@@ -264,33 +270,42 @@ function buildMetadataFromLoader(
 
       coverUrl: item.coverUrl || "",
 
-      videoUrl: item.videoUrl || "",
+      videoUrl:
+        item.videoUrl || undefined,
 
-      usageCount:
-        Number(item.usageAmount || 0),
+      usageCount: Number(
+        item.usageAmount || 0
+      ),
 
-      likeCount:
-        Number(item.likeAmount || 0),
+      likeCount: Number(
+        item.likeAmount || 0
+      ),
 
       createdAt: itemCreateTime
         ? new Date(
             itemCreateTime * 1000
           ).toISOString()
-        : "",
+        : undefined,
 
       createdTimestamp:
-        itemCreateTime || 0,
+        itemCreateTime || undefined,
 
       canonicalUrl:
         item.canonicalPath
           ? `https://www.capcut.com${item.canonicalPath}`
-          : "",
+          : undefined,
 
       author
     };
   });
 
-  return {
+  const desc = templateData.desc || "";
+
+  /*
+   * FINAL METADATA
+   */
+
+  const metadata = {
     id: String(
       templateData.templateId ||
       loaderObj?.templateId ||
@@ -299,10 +314,9 @@ function buildMetadataFromLoader(
 
     title: templateData.title || "",
 
-    description,
+    description: desc,
 
-    hashtags:
-      extractHashtags(description),
+    hashtags: extractHashtags(desc),
 
     tagTitle:
       templateData.tagTitle || "",
@@ -310,10 +324,7 @@ function buildMetadataFromLoader(
     canonicalUrl:
       loaderObj?.canonicalPath
         ? `https://www.capcut.com${loaderObj.canonicalPath}`
-        : (
-            templateData.structuredData?.url ||
-            ""
-          ),
+        : templateData.structuredData?.url || "",
 
     originalUrl: inputUrl,
 
@@ -323,15 +334,20 @@ function buildMetadataFromLoader(
     videoUrl:
       templateData.videoUrl || "",
 
-    videoWidth: width,
+    videoWidth: Number(
+      templateData.videoWidth || 0
+    ),
 
-    videoHeight: height,
+    videoHeight: Number(
+      templateData.videoHeight || 0
+    ),
 
     videoRatio:
       templateData.videoRatio ||
       (
-        width && height
-          ? `${width}:${height}`
+        templateData.videoWidth &&
+        templateData.videoHeight
+          ? `${templateData.videoWidth}:${templateData.videoHeight}`
           : ""
       ),
 
@@ -341,30 +357,25 @@ function buildMetadataFromLoader(
       (duration / 1000).toFixed(2)
     ),
 
-    segmentCount:
-      Number(
-        templateData.segmentAmount || 0
-      ),
+    segmentCount: Number(
+      templateData.segmentAmount || 0
+    ),
 
-    usageCount:
-      Number(
-        templateData.usageAmount || 0
-      ),
+    usageCount: Number(
+      templateData.usageAmount || 0
+    ),
 
-    likeCount:
-      Number(
-        templateData.likeAmount || 0
-      ),
+    likeCount: Number(
+      templateData.likeAmount || 0
+    ),
 
-    playCount:
-      Number(
-        templateData.playAmount || 0
-      ),
+    playCount: Number(
+      templateData.playAmount || 0
+    ),
 
-    commentCount:
-      Number(
-        templateData.commentAmount || 0
-      ),
+    commentCount: Number(
+      templateData.commentAmount || 0
+    ),
 
     createdAt: createTime
       ? new Date(
@@ -388,18 +399,17 @@ function buildMetadataFromLoader(
       templateData.templateLanguage || "",
 
     itemType:
-      templateData.itemType || "",
+      templateData.itemType,
 
     scene:
-      templateData.scene || "",
+      templateData.scene,
 
     isValidRegion:
       templateData.is_valid_template_region ??
-      loaderObj?.isValidTemplateRegion ??
-      null,
+      loaderObj?.isValidTemplateRegion,
 
     useAvailable:
-      templateData.useAvailable ?? null,
+      templateData.useAvailable,
 
     author: {
       name:
@@ -420,9 +430,7 @@ function buildMetadataFromLoader(
         templateData.author?.secUid || "",
 
       uid:
-        Number(
-          templateData.author?.uid || 0
-        )
+        templateData.author?.uid || 0
     },
 
     collections:
@@ -433,19 +441,33 @@ function buildMetadataFromLoader(
         : [],
 
     recommendList:
-      recommendList.length
+      recommendList.length > 0
         ? recommendList
-        : []
+        : undefined
+  };
+
+  return {
+    success: true,
+    data: metadata
   };
 }
 
+
+/*
+ * API ENDPOINT
+ */
+
 module.exports = createApi({
-  name: "CapCut Downloader",
+  name: "CapCut Scraper",
+
   description:
-    "Mengambil metadata dan URL video dari template CapCut.",
+    "Scrape metadata dan video dari URL template CapCut.",
+
   method: "GET",
+
   endpoint: "/api/downloader/capcut",
-  category: "Downloader",
+
+  category: "downloader",
 
   parameters: [
     {
@@ -458,6 +480,8 @@ module.exports = createApi({
   ],
 
   async handler(req, res) {
+    const { url } = req.query || {};
+
     const check = requireParams(
       req.query,
       ["url"]
@@ -471,157 +495,26 @@ module.exports = createApi({
       });
     }
 
-    const inputUrl =
-      String(req.query.url || "").trim();
-
-    let parsedUrl;
-
     try {
-      parsedUrl = new URL(inputUrl);
-    } catch {
-      return res.status(400).json({
-        success: false,
-        message: "URL tidak valid."
-      });
-    }
+      const result =
+        await scrapeCapcut(url);
 
-    if (
-      !parsedUrl.hostname
-        .toLowerCase()
-        .endsWith("capcut.com")
-    ) {
-      return res.status(400).json({
-        success: false,
-        message:
-          "URL harus berasal dari CapCut."
-      });
-    }
-
-    try {
-      const response = await axios.get(
-        inputUrl,
-        {
-          headers: {
-            "User-Agent":
-              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-
-            "Accept-Language":
-              "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7",
-
-            Accept:
-              "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-
-            Referer:
-              "https://www.capcut.com/"
-          },
-
-          timeout: 15000,
-
-          maxRedirects: 5,
-
-          validateStatus: status =>
-            status >= 200 && status < 400
-        }
-      );
-
-      const html =
-        typeof response.data === "string"
-          ? response.data
-          : String(response.data || "");
-
-      if (!html) {
-        return res.status(502).json({
-          success: false,
-          message:
-            "CapCut tidak mengembalikan halaman HTML."
-        });
+      if (!result.success) {
+        return res.status(400).json(result);
       }
 
-      /*
-       * Coba metode loaderData terlebih dahulu.
-       */
-      const loaderObj =
-        findLoaderData(html);
-
-      if (loaderObj?.templateDetail) {
-        const data =
-          buildMetadataFromLoader(
-            loaderObj.templateDetail,
-            loaderObj,
-            inputUrl
-          );
-
-        if (data) {
-          return res.status(200).json({
-            success: true,
-            data
-          });
-        }
-      }
-
-      /*
-       * Jika loaderData tidak ditemukan,
-       * gunakan fallback regex.
-       */
-      const fallback =
-        buildMetadataFromRegex(
-          html,
-          inputUrl
-        );
-
-      if (!fallback) {
-        return res.status(404).json({
-          success: false,
-          message:
-            "Gagal mengekstrak data template CapCut. Struktur halaman mungkin telah berubah atau CapCut memblokir permintaan."
-        });
-      }
-
-      return res.status(200).json({
-        success: true,
-        data: fallback
-      });
+      return res.status(200).json(result);
 
     } catch (error) {
       console.error(
-        "CAPCUT DOWNLOADER ERROR:",
+        "[CAPCUT SCRAPER]",
         error
       );
-
-      const status =
-        error.response?.status || 500;
-
-      if (status === 403) {
-        return res.status(403).json({
-          success: false,
-          message:
-            "Permintaan ke CapCut ditolak (403)."
-        });
-      }
-
-      if (status === 404) {
-        return res.status(404).json({
-          success: false,
-          message:
-            "Halaman/template CapCut tidak ditemukan."
-        });
-      }
-
-      if (
-        error.code === "ECONNABORTED" ||
-        error.code === "ETIMEDOUT"
-      ) {
-        return res.status(504).json({
-          success: false,
-          message:
-            "Request ke CapCut timeout."
-        });
-      }
 
       return res.status(500).json({
         success: false,
         message:
-          "Gagal mengambil data dari CapCut.",
+          "Gagal mengambil data CapCut.",
         error:
           error.message || String(error)
       });
