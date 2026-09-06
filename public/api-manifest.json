@@ -1,0 +1,70 @@
+[
+  {
+    "name": "Instagram Downloader",
+    "description": "Download media from Instagram",
+    "method": "GET",
+    "endpoint": "/api/downloader/instagram",
+    "category": "Downloader",
+    "parameters": [
+      {
+        "name": "url",
+        "type": "string",
+        "required": true,
+        "example": "https://example.com"
+      }
+    ]
+  },
+  {
+    "name": "TikTok Downloader",
+    "description": "Download media from TikTok",
+    "method": "GET",
+    "endpoint": "/api/downloader/tiktok",
+    "category": "Downloader",
+    "parameters": [
+      {
+        "name": "url",
+        "type": "string",
+        "required": true,
+        "example": "https://example.com"
+      }
+    ]
+  },
+  {
+    "name": "YouTube Downloader",
+    "description": "Download media from YouTube",
+    "method": "GET",
+    "endpoint": "/api/downloader/youtube",
+    "category": "Downloader",
+    "parameters": [
+      {
+        "name": "url",
+        "type": "string",
+        "required": true,
+        "example": "https://example.com"
+      }
+    ]
+  },
+  {
+    "name": "Example API",
+    "description": "A simple example endpoint to verify SamApi is working.",
+    "method": "GET",
+    "endpoint": "/api/example",
+    "category": "Tools",
+    "parameters": []
+  },
+  {
+    "name": "Example Search API",
+    "description": "A sample search endpoint demonstrating query parameters.",
+    "method": "GET",
+    "endpoint": "/api/search/example",
+    "category": "Search",
+    "parameters": [
+      {
+        "name": "query",
+        "type": "string",
+        "required": true,
+        "example": "hello world"
+      }
+    ]
+  }
+]
