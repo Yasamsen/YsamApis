@@ -1,0 +1,14 @@
+{
+  "name": "samapi",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "description": "SamApi — Professional Developer API Platform",
+  "scripts": {
+    "build": "node scripts/generate-manifest.js",
+    "postinstall": "node scripts/generate-manifest.js || true"
+  },
+  "dependencies": {
+    "mongodb": "^6.3.0"
+  }
+}
