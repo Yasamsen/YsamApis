@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Documentation — SamApi</title>
+  <meta name="description" content="SamApi documentation — explore endpoints, parameters, and try requests live." />
+  <meta name="theme-color" content="#0a0a0b" />
+
+  <meta property="og:title" content="Documentation — SamApi" />
+  <meta property="og:description" content="Explore SamApi endpoints with live request testing." />
+  <meta property="og:type" content="website" />
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%233b82f6'/><text x='16' y='22' text-anchor='middle' fill='white' font-size='16' font-family='system-ui' font-weight='700'>S</text></svg>" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body data-page="docs">
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <nav class="navbar" role="navigation" aria-label="Main">
+    <div class="navbar-inner">
+      <a href="/" class="logo">
+        <span class="logo-icon">S</span>
+        SamApi
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/#explore">APIs</a></li>
+        <li><a href="/docs" class="active">Documentation</a></li>
+        <li><a href="/status">Status</a></li>
+        <li><a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+      </ul>
+
+      <div class="nav-right">
+        <div class="status-pill">
+          <span class="status-dot" aria-hidden="true"></span>
+          API Online
+        </div>
+        <button type="button" class="theme-toggle" aria-label="Toggle theme">☾</button>
+        <button type="button" class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">☰</button>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobile-menu" role="menu">
+      <a href="/#explore" role="menuitem">APIs</a>
+      <a href="/docs" role="menuitem">Documentation</a>
+      <a href="/status" role="menuitem">Status</a>
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer" role="menuitem">GitHub</a>
+    </div>
+  </nav>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar" id="docs-sidebar" aria-label="API navigation">
+      <div class="skeleton skeleton-text" style="margin:12px 20px;width:60%;"></div>
+      <div class="skeleton skeleton-text" style="margin:8px 20px;width:80%;"></div>
+      <div class="skeleton skeleton-text" style="margin:8px 20px;width:70%;"></div>
+    </aside>
+
+    <main class="docs-content" id="docs-content">
+      <div class="empty-state">
+        <div class="skeleton skeleton-text" style="width:40%;height:28px;margin:0 auto 16px;"></div>
+        <div class="skeleton skeleton-text" style="width:70%;margin:0 auto;"></div>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer" style="margin-top:0;">
+    <div class="container">
+      <div class="footer-bottom" style="border-top:none;padding-top:0;">
+        <span>© 2026 SamApi</span>
+        <span>Built for developers.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/script.js"></script>
+</body>
+</html>
