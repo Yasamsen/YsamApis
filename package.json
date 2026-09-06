@@ -1,0 +1,16 @@
+{
+  "name": "samapi",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "description": "SamApi — Modern Developer APIs",
+  "scripts": {
+    "build": "node scripts/generate-manifest.js",
+    "generate": "node scripts/generate-manifest.js",
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
