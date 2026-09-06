@@ -5,8 +5,9 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node --no-deprecation index.js"
-  },
+  "start": "node --no-deprecation index.js",
+  "build": "node scripts/generate-manifest.js"
+},
   "author": "Z7:林企业",
   "license": "MIT",
   "dependencies": {
