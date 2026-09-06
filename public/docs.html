@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Documentation — SamApi</title>
+<meta name="description" content="API documentation for SamApi endpoints." />
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body class="bg-grid" data-theme="dark">
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="brand" href="/"><span class="brand-mark">S</span>SamApi</a>
+    <div class="nav-links">
+      <a href="/#explorer">APIs</a>
+      <a href="/docs" class="active">Documentation</a>
+      <a href="/status">Status</a>
+      <span class="nav-status"><span class="dot"></span>API Online</span>
+    </div>
+    <div class="navbar-right">
+      <button class="search-trigger" data-search-open aria-label="Search"><span>Search</span><span class="kbd">Ctrl K</span></button>
+      <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme"></button>
+      <div data-nav-auth></div>
+      <button class="hamburger" data-hamburger aria-label="Menu">&#9776;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-drawer" data-mobile-drawer>
+  <div class="mobile-drawer-backdrop"></div>
+  <div class="mobile-drawer-panel">
+    <a href="/#explorer">APIs</a>
+    <a href="/docs">Documentation</a>
+    <a href="/status">Status</a>
+  </div>
+</div>
+
+<main class="container docs-layout" data-docs-root>
+  <aside class="docs-sidebar" data-docs-sidebar></aside>
+  <section class="docs-content" data-docs-content>
+    <div class="empty-state">Loading documentation&hellip;</div>
+  </section>
+</main>
+
+<div class="modal-overlay" data-search-overlay>
+  <div class="search-modal">
+    <input class="search-modal-input" type="text" placeholder="Search API name, endpoint, category..." data-search-input />
+    <div class="search-results" data-search-results></div>
+  </div>
+</div>
+
+<script src="/script.js"></script>
+</body>
+</html>
