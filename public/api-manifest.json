@@ -1,0 +1,70 @@
+[
+  {
+    "name": "Instagram Downloader",
+    "description": "Download media from Instagram",
+    "method": "GET",
+    "endpoint": "/api/downloader/instagram",
+    "category": "Downloader",
+    "parameters": [
+      {
+        "name": "url",
+        "type": "string",
+        "required": true,
+        "example": "https://www.instagram.com/p/ABC123/"
+      }
+    ]
+  },
+  {
+    "name": "TikTok Downloader",
+    "description": "Download media from TikTok",
+    "method": "GET",
+    "endpoint": "/api/downloader/tiktok",
+    "category": "Downloader",
+    "parameters": [
+      {
+        "name": "url",
+        "type": "string",
+        "required": true,
+        "example": "https://www.tiktok.com/@user/video/1234567890"
+      }
+    ]
+  },
+  {
+    "name": "YouTube Downloader",
+    "description": "Download media from YouTube",
+    "method": "GET",
+    "endpoint": "/api/downloader/youtube",
+    "category": "Downloader",
+    "parameters": [
+      {
+        "name": "url",
+        "type": "string",
+        "required": true,
+        "example": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+      }
+    ]
+  },
+  {
+    "name": "Example API",
+    "description": "Simple health-check endpoint to verify SamApi is running.",
+    "method": "GET",
+    "endpoint": "/api/example",
+    "category": "General",
+    "parameters": []
+  },
+  {
+    "name": "Example Search API",
+    "description": "Simple search endpoint for demonstration purposes.",
+    "method": "GET",
+    "endpoint": "/api/search/example",
+    "category": "Search",
+    "parameters": [
+      {
+        "name": "query",
+        "type": "string",
+        "required": true,
+        "example": "samapi"
+      }
+    ]
+  }
+]
