@@ -1,0 +1,249 @@
+[
+  {
+    "name": "Instagram Downloader",
+    "description": "Download media from Instagram",
+    "method": "GET",
+    "endpoint": "/api/downloader/instagram",
+    "category": "Downloader",
+    "parameters": [
+      {
+        "name": "url",
+        "type": "string",
+        "required": true,
+        "example": "https://www.instagram.com/p/ABC123/"
+      }
+    ]
+  },
+  {
+    "name": "Pornhub API",
+    "description": "Search videos, get video metadata, categories & tags via Pornhub Webmasters API. Stream/download URLs tidak disediakan.",
+    "method": "GET",
+    "endpoint": "/api/downloader/pornhub",
+    "category": "Downloader",
+    "parameters": [
+      {
+        "name": "action",
+        "type": "string",
+        "required": true,
+        "example": "search"
+      },
+      {
+        "name": "query",
+        "type": "string",
+        "required": false,
+        "example": "amateur"
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "required": false,
+        "example": "ph5xxxxx"
+      },
+      {
+        "name": "page",
+        "type": "number",
+        "required": false,
+        "example": "1"
+      },
+      {
+        "name": "ordering",
+        "type": "string",
+        "required": false,
+        "example": "mostviewed"
+      },
+      {
+        "name": "period",
+        "type": "string",
+        "required": false,
+        "example": "weekly"
+      },
+      {
+        "name": "letter",
+        "type": "string",
+        "required": false,
+        "example": "a"
+      }
+    ]
+  },
+  {
+    "name": "TikTok Downloader",
+    "description": "Download video & image slideshow dari TikTok. Support vt.tiktok.com, vm.tiktok.com, dan link penuh.",
+    "method": "GET",
+    "endpoint": "/api/downloader/tiktok",
+    "category": "Downloader",
+    "parameters": [
+      {
+        "name": "url",
+        "type": "string",
+        "required": true,
+        "example": "https://vt.tiktok.com/ZSxxxxx/"
+      }
+    ]
+  },
+  {
+    "name": "YouTube Downloader",
+    "description": "Download media from YouTube",
+    "method": "GET",
+    "endpoint": "/api/downloader/youtube",
+    "category": "Downloader",
+    "parameters": [
+      {
+        "name": "url",
+        "type": "string",
+        "required": true,
+        "example": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+      }
+    ]
+  },
+  {
+    "name": "Example API",
+    "description": "Simple health-check endpoint to verify SamApi is running.",
+    "method": "GET",
+    "endpoint": "/api/example",
+    "category": "General",
+    "parameters": []
+  },
+  {
+    "name": "Pornhub Categories",
+    "description": "List all Pornhub categories from the public Webmasters API.",
+    "method": "GET",
+    "endpoint": "/api/pornhub/categories",
+    "category": "Pornhub",
+    "parameters": []
+  },
+  {
+    "name": "Pornhub Download URLs",
+    "description": "Direct MP4/HLS download URLs — not available (copyright). Use search/video for metadata.",
+    "method": "GET",
+    "endpoint": "/api/pornhub/download",
+    "category": "Pornhub",
+    "parameters": [
+      {
+        "name": "id",
+        "type": "string",
+        "required": true,
+        "example": "ph5a1234567890a"
+      }
+    ]
+  },
+  {
+    "name": "Pornhub Search",
+    "description": "Search videos on Pornhub via public Webmasters API.",
+    "method": "GET",
+    "endpoint": "/api/pornhub/search",
+    "category": "Pornhub",
+    "parameters": [
+      {
+        "name": "query",
+        "type": "string",
+        "required": true,
+        "example": "amateur"
+      },
+      {
+        "name": "page",
+        "type": "number",
+        "required": false,
+        "example": "1"
+      },
+      {
+        "name": "ordering",
+        "type": "string",
+        "required": false,
+        "example": "mostviewed"
+      },
+      {
+        "name": "period",
+        "type": "string",
+        "required": false,
+        "example": "weekly"
+      },
+      {
+        "name": "thumbsize",
+        "type": "string",
+        "required": false,
+        "example": "small"
+      },
+      {
+        "name": "category",
+        "type": "string",
+        "required": false,
+        "example": ""
+      }
+    ]
+  },
+  {
+    "name": "Pornhub Streams",
+    "description": "HLS/MP4 stream URLs — not available (copyright). Use search/video for metadata.",
+    "method": "GET",
+    "endpoint": "/api/pornhub/streams",
+    "category": "Pornhub",
+    "parameters": [
+      {
+        "name": "id",
+        "type": "string",
+        "required": true,
+        "example": "ph5a1234567890a"
+      }
+    ]
+  },
+  {
+    "name": "Pornhub Tags",
+    "description": "Get tags filtered by first letter (a–z).",
+    "method": "GET",
+    "endpoint": "/api/pornhub/tags",
+    "category": "Pornhub",
+    "parameters": [
+      {
+        "name": "letter",
+        "type": "string",
+        "required": false,
+        "example": "a"
+      }
+    ]
+  },
+  {
+    "name": "Pornhub Video Active",
+    "description": "Check if a video is still available / active.",
+    "method": "GET",
+    "endpoint": "/api/pornhub/active",
+    "category": "Pornhub",
+    "parameters": [
+      {
+        "name": "id",
+        "type": "string",
+        "required": true,
+        "example": "ph5a1234567890a"
+      }
+    ]
+  },
+  {
+    "name": "Pornhub Video Info",
+    "description": "Get video metadata (title, duration, views, tags, categories, thumbs).",
+    "method": "GET",
+    "endpoint": "/api/pornhub/video",
+    "category": "Pornhub",
+    "parameters": [
+      {
+        "name": "id",
+        "type": "string",
+        "required": true,
+        "example": "ph5a1234567890a"
+      }
+    ]
+  },
+  {
+    "name": "Example Search API",
+    "description": "Simple search endpoint for demonstration purposes.",
+    "method": "GET",
+    "endpoint": "/api/search/example",
+    "category": "Search",
+    "parameters": [
+      {
+        "name": "query",
+        "type": "string",
+        "required": true,
+        "example": "samapi"
+      }
+    ]
+  }
+]
