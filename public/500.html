@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>500 — SamApi</title>
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body class="bg-grid" data-theme="dark">
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="brand" href="/"><span class="brand-mark">S</span>SamApi</a>
+    <div class="navbar-right"><button class="theme-toggle" data-theme-toggle aria-label="Toggle theme"></button></div>
+  </div>
+</nav>
+<div class="error-shell">
+  <div class="error-code">500</div>
+  <h2>Something went wrong.</h2>
+  <p>An unexpected server error occurred.<br />API Status: <a href="/status" style="color:var(--accent);">Operational</a></p>
+  <div class="error-actions">
+    <a class="btn btn-primary" href="javascript:location.reload()">Retry</a>
+    <a class="btn btn-ghost" href="/docs">Documentation</a>
+  </div>
+</div>
+<script src="/script.js"></script>
+</body>
+</html>
