@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>SamApi — Modern Developer APIs</title>
+  <meta name="description" content="Fast, reliable and developer-friendly APIs for modern applications. Built by YaSAM." />
+  <meta name="theme-color" content="#050506" />
+  <meta name="author" content="YaSAM" />
+
+  <meta property="og:title" content="SamApi — Modern Developer APIs" />
+  <meta property="og:description" content="Fast, reliable and developer-friendly APIs for modern applications." />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="SamApi" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="SamApi — Modern Developer APIs" />
+  <meta name="twitter:description" content="Fast and developer-friendly APIs for modern applications." />
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%236366f1'/><text x='16' y='22' text-anchor='middle' fill='white' font-size='15' font-family='system-ui' font-weight='700'>S</text></svg>" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body data-page="home">
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="bg-glow-2" aria-hidden="true"></div>
+
+  <nav class="navbar" role="navigation" aria-label="Main">
+    <div class="navbar-inner">
+      <a href="/" class="logo">
+        <span class="logo-icon">S</span>
+        SamApi
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/#explore">APIs</a></li>
+        <li><a href="/docs">Documentation</a></li>
+        <li><a href="/status">Status</a></li>
+      </ul>
+
+      <div class="nav-right">
+        <div class="status-pill" title="API status">
+          <span class="status-dot" aria-hidden="true"></span>
+          Online
+        </div>
+        <button type="button" class="theme-toggle" aria-label="Toggle theme">☾</button>
+        <button type="button" class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">☰</button>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobile-menu" role="menu">
+      <a href="/#explore" role="menuitem">APIs</a>
+      <a href="/docs" role="menuitem">Documentation</a>
+      <a href="/status" role="menuitem">Status</a>
+      <a href="https://wa.me/6281519986005" target="_blank" rel="noopener noreferrer" role="menuitem">Contact YaSAM</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="badge">
+          <span class="badge-dot" aria-hidden="true"></span>
+          SamApi v1.0
+        </div>
+        <h1>Powerful APIs.<br />Simple Integration.</h1>
+        <p>Fast, reliable and developer-friendly APIs for modern applications.</p>
+        <div class="hero-actions">
+          <a href="#explore" class="btn btn-primary">Explore APIs</a>
+          <a href="/docs" class="btn btn-secondary">Documentation</a>
+        </div>
+
+        <div class="code-preview">
+          <div class="code-preview-header">
+            <span>Request</span>
+            <button type="button" class="copy-btn" data-copy="hero-curl">Copy</button>
+          </div>
+          <pre id="hero-curl">curl https://your-domain.vercel.app/api/example</pre>
+          <div class="code-preview-header" style="border-top:1px solid var(--border-subtle);border-bottom:none;">
+            <span>Response</span>
+            <button type="button" class="copy-btn" data-copy="hero-response">Copy</button>
+          </div>
+          <pre id="hero-response">{
+  "success": true,
+  "message": "SamApi is working"
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="stats" aria-label="API statistics">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-total">—</div>
+          <div class="stat-label">Total API</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-online">—</div>
+          <div class="stat-label">API Online</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-categories">—</div>
+          <div class="stat-label">Categories</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">&lt;500ms</div>
+          <div class="stat-label">Response</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="explore">
+      <div class="container">
+        <div class="section-header">
+          <h2>Explore APIs</h2>
+          <p>Browse all available SamApi endpoints.</p>
+        </div>
+
+        <div class="explorer-controls">
+          <div class="search-box">
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input type="search" id="api-search" placeholder="Search API..." aria-label="Search APIs" autocomplete="off" />
+          </div>
+          <div class="filter-pills" id="filter-pills" role="group" aria-label="Filter by category"></div>
+        </div>
+
+        <div class="api-grid" id="api-grid">
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="logo">
+            <span class="logo-icon">S</span>
+            SamApi
+          </a>
+          <p>Modern APIs for modern applications.</p>
+          <div class="footer-creator">
+            <div class="footer-creator-label">Created by</div>
+            <div class="footer-creator-name">YaSAM</div>
+            <a class="footer-creator-wa" href="https://wa.me/6281519986005" target="_blank" rel="noopener noreferrer">
+              WhatsApp · 6281519986005
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="/#explore">APIs</a>
+          <a href="/docs">Documentation</a>
+          <a href="/status">Status</a>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <a href="https://wa.me/6281519986005" target="_blank" rel="noopener noreferrer">WhatsApp YaSAM</a>
+          <a href="/docs">API Reference</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 SamApi · Built by YaSAM</span>
+        <span>Built for developers.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/script.js"></script>
+</body>
+</html>
