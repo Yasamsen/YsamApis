@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Status — SamApi</title>
+  <meta name="description" content="SamApi system status — all services operational." />
+  <meta name="theme-color" content="#0a0a0b" />
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%233b82f6'/><text x='16' y='22' text-anchor='middle' fill='white' font-size='16' font-family='system-ui' font-weight='700'>S</text></svg>" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body data-page="status">
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <nav class="navbar" role="navigation" aria-label="Main">
+    <div class="navbar-inner">
+      <a href="/" class="logo">
+        <span class="logo-icon">S</span>
+        SamApi
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/#explore">APIs</a></li>
+        <li><a href="/docs">Documentation</a></li>
+        <li><a href="/status" class="active">Status</a></li>
+        <li><a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+      </ul>
+
+      <div class="nav-right">
+        <div class="status-pill">
+          <span class="status-dot" aria-hidden="true"></span>
+          API Online
+        </div>
+        <button type="button" class="theme-toggle" aria-label="Toggle theme">☾</button>
+        <button type="button" class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">☰</button>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobile-menu" role="menu">
+      <a href="/#explore" role="menuitem">APIs</a>
+      <a href="/docs" role="menuitem">Documentation</a>
+      <a href="/status" role="menuitem">Status</a>
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer" role="menuitem">GitHub</a>
+    </div>
+  </nav>
+
+  <main class="container status-page">
+    <h1>SamApi Status</h1>
+
+    <div class="status-banner">
+      <span class="status-dot" style="animation:none;" aria-hidden="true"></span>
+      All Systems Operational
+    </div>
+
+    <div class="status-list" role="list">
+      <div class="status-item" role="listitem">
+        <span class="status-item-name">API Gateway</span>
+        <span class="status-operational">Operational</span>
+      </div>
+      <div class="status-item" role="listitem">
+        <span class="status-item-name">Downloader APIs</span>
+        <span class="status-operational">Operational</span>
+      </div>
+      <div class="status-item" role="listitem">
+        <span class="status-item-name">Search APIs</span>
+        <span class="status-operational">Operational</span>
+      </div>
+      <div class="status-item" role="listitem">
+        <span class="status-item-name">Documentation</span>
+        <span class="status-operational">Operational</span>
+      </div>
+    </div>
+
+    <p style="text-align:center;margin-top:32px;color:var(--text-muted);font-size:0.875rem;">
+      Status is configuration-based. Real-time monitoring is not yet connected.
+    </p>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom" style="border-top:none;padding-top:0;">
+        <span>© 2026 SamApi</span>
+        <span>Built for developers.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/script.js"></script>
+</body>
+</html>
