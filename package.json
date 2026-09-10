@@ -1,0 +1,19 @@
+{
+  "name": "samapi",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "description": "SamApi — Professional Developer API Platform",
+  "scripts": {
+    "build": "node scripts/generate-manifest.js",
+    "generate": "node scripts/generate-manifest.js"
+  },
+  "dependencies": {
+    "mongodb": "^6.8.0",
+    "cookie": "^0.6.0",
+    "iron-session": "^8.0.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
