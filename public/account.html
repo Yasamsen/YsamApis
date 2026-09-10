@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Account — SamApi</title>
+  <meta name="description" content="Your SamApi account" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect fill='%236366f1' width='32' height='32' rx='8'/><text x='50%' y='55%' fill='white' font-size='16' font-family='system-ui' text-anchor='middle' dominant-baseline='middle' font-weight='700'>S</text></svg>" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body data-page="account">
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="/" class="logo">Sam<span>Api</span></a>
+      <ul class="nav-links">
+        <li><a href="/#apis">APIs</a></li>
+        <li><a href="/docs">Documentation</a></li>
+        <li><a href="/status">Status</a></li>
+      </ul>
+      <div class="nav-actions" style="margin-left:auto">
+        <button type="button" class="theme-toggle" aria-label="Toggle theme">☀</button>
+        <div data-user-slot></div>
+        <button type="button" class="hamburger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="mobile-nav">
+    <a href="/#apis">APIs</a>
+    <a href="/docs">Documentation</a>
+    <a href="/status">Status</a>
+    <a href="/account">Account</a>
+  </div>
+
+  <main style="padding:2rem 1.5rem 4rem;">
+    <div id="account-content">
+      <div class="account-card skeleton" style="height:320px;max-width:480px;margin:0 auto;"></div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-bottom" style="border:none;padding-top:0;">
+      <span>© 2026 SamApi</span>
+      <span>Built for developers.</span>
+    </div>
+  </footer>
+
+  <script src="/script.js"></script>
+</body>
+</html>
