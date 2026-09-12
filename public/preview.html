@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preview - MyStorage</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body { display: flex; flex-direction: column; min-height: 100vh; }
+    .preview-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border); background: var(--bg-elevated);
+    }
+    .preview-content {
+      flex: 1; display: flex; align-items: center; justify-content: center; padding: 1rem;
+    }
+    .preview-content img, .preview-content video {
+      max-width: 100%; max-height: calc(100vh - 80px); border-radius: 8px;
+    }
+    .preview-content iframe { width: 100%; height: calc(100vh - 80px); border: none; }
+    .preview-content pre {
+      max-width: 900px; width: 100%; max-height: calc(100vh - 100px); overflow: auto;
+      background: var(--bg-card); padding: 1.25rem; border-radius: 8px; font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="preview-bar">
+    <span id="fileName" style="font-weight:600">Preview</span>
+    <div style="display:flex;gap:0.5rem">
+      <a class="btn btn-secondary btn-sm" id="downloadBtn" href="#">Download</a>
+      <a class="btn btn-ghost btn-sm" href="/storage">Back</a>
+    </div>
+  </div>
+  <div class="preview-content" id="content">
+    <div class="spinner" style="border-top-color:var(--primary)"></div>
+  </div>
+  <script src="/js/preview.js"></script>
+</body>
+</html>
