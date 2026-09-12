@@ -1,0 +1,35 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+<div class="dash-layout">
+  <%- include('partials/sidebar-user') %>
+  <div class="dash-content">
+    <h1 style="font-size:1.5rem;margin-bottom:1rem;">Request History</h1>
+    <div class="card">
+      <% if (logs && logs.length) { %>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Endpoint</th><th>Method</th><th>Status</th><th>Response</th><th>Date</th></tr></thead>
+          <tbody>
+            <% logs.forEach(function(l){ %>
+              <tr>
+                <td class="mono text-sm"><%= l.endpoint %></td>
+                <td><%= l.method %></td>
+                <td><span class="badge <%= l.success?'badge-get':'badge-delete' %>"><%= l.statusCode %></span></td>
+                <td><%= l.responseTime %>ms</td>
+                <td class="text-muted text-sm"><%= new Date(l.createdAt).toLocaleString() %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table></div>
+        <% if (pagination && pagination.pages > 1) { %>
+          <div class="flex gap-1 mt-2" style="justify-content:center;">
+            <% if (pagination.page > 1) { %><a class="btn btn-secondary btn-sm" href="?page=<%= pagination.page-1 %>">Prev</a><% } %>
+            <span class="text-muted text-sm" style="align-self:center;">Page <%= pagination.page %> / <%= pagination.pages %></span>
+            <% if (pagination.page < pagination.pages) { %><a class="btn btn-secondary btn-sm" href="?page=<%= pagination.page+1 %>">Next</a><% } %>
+          </div>
+        <% } %>
+      <% } else { %><p class="text-muted">No history yet.</p><% } %>
+    </div>
+  </div>
+</div>
+<script src="/js/main.js"></script>
+</div></body></html>
