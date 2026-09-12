@@ -1,0 +1,89 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+
+<main class="section">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <h1 class="section-title">API Explorer</h1>
+        <p class="section-desc"><%= stats.total %> endpoints · <%= stats.online %> online</p>
+      </div>
+    </div>
+
+    <div class="filters-bar">
+      <div class="search-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="search" id="apiSearch" placeholder="Search APIs..." autocomplete="off">
+      </div>
+      <select class="form-select" id="filterCategory" style="width: auto; min-width: 140px;">
+        <option value="">All categories</option>
+        <% (categories || []).forEach(function(c) { %>
+          <option value="<%= c %>"><%= c %></option>
+        <% }) %>
+      </select>
+      <select class="form-select" id="filterMethod" style="width: auto; min-width: 110px;">
+        <option value="">All methods</option>
+        <option value="GET">GET</option>
+        <option value="POST">POST</option>
+      </select>
+    </div>
+
+    <div class="api-grid" id="apiGrid">
+      <% (endpoints || []).forEach(function(ep) { %>
+        <div class="api-card" data-name="<%= ep.name.toLowerCase() %>" data-category="<%= ep.category %>" data-method="<%= ep.method %>" data-desc="<%= (ep.description || '').toLowerCase() %>">
+          <div class="api-card-header">
+            <span class="api-card-title"><%= ep.name %></span>
+            <span class="badge badge-<%= ep.method.toLowerCase() %>"><%= ep.method %></span>
+          </div>
+          <p class="api-card-desc"><%= ep.description %></p>
+          <div class="api-card-path"><%= ep.endpoint %></div>
+          <div class="api-card-meta">
+            <span class="badge badge-cat"><%= ep.category %></span>
+            <span class="status-dot <%= ep.status %>"></span>
+            <span class="text-xs text-muted" style="text-transform:capitalize"><%= ep.status %></span>
+          </div>
+          <div class="flex gap-1 mt-1" style="margin-top: 0.75rem;">
+            <a href="/try/<%= ep.category.toLowerCase() %>/<%= ep.id.split('/')[1] %>" class="btn btn-primary btn-sm">Try API</a>
+            <a href="/docs/<%= ep.category.toLowerCase() %>/<%= ep.id.split('/')[1] %>" class="btn btn-secondary btn-sm">Docs</a>
+            <button class="btn btn-ghost btn-sm copy-btn" onclick="copyText('<%= ep.endpoint %>', this)">Copy</button>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+    <p id="noResults" class="text-muted" style="display:none; text-align:center; padding: 2rem;">No APIs match your filters.</p>
+  </div>
+</main>
+
+<%- include('partials/footer') %>
+<script src="/js/main.js"></script>
+<script>
+(function() {
+  const search = document.getElementById('apiSearch');
+  const cat = document.getElementById('filterCategory');
+  const method = document.getElementById('filterMethod');
+  const cards = document.querySelectorAll('#apiGrid .api-card');
+  const noRes = document.getElementById('noResults');
+
+  function filter() {
+    const q = (search.value || '').toLowerCase().trim();
+    const c = cat.value;
+    const m = method.value;
+    let visible = 0;
+    cards.forEach(card => {
+      const matchQ = !q || card.dataset.name.includes(q) || card.dataset.desc.includes(q);
+      const matchC = !c || card.dataset.category === c;
+      const matchM = !m || card.dataset.method === m;
+      const show = matchQ && matchC && matchM;
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    noRes.style.display = visible === 0 ? 'block' : 'none';
+  }
+  search.addEventListener('input', filter);
+  cat.addEventListener('change', filter);
+  method.addEventListener('change', filter);
+})();
+</script>
+</div>
+</body>
+</html>
