@@ -1,0 +1,20 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+<div class="dash-layout">
+  <%- include('partials/sidebar-user') %>
+  <div class="dash-content">
+    <h1 style="font-size:1.5rem;margin-bottom:1rem;">Settings</h1>
+    <div class="card" style="max-width:480px;">
+      <p class="text-secondary">Theme preference is saved in your browser.</p>
+      <button class="btn btn-secondary mt-2" id="themeToggle2">Toggle Dark / Light Mode</button>
+      <p class="text-muted text-sm mt-2">Account data is managed via Google. To change name or avatar, update your Google profile.</p>
+    </div>
+  </div>
+</div>
+<script src="/js/main.js"></script>
+<script>
+document.getElementById('themeToggle2')?.addEventListener('click', () => {
+  document.getElementById('themeToggle')?.click();
+});
+</script>
+</div></body></html>
