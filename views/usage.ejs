@@ -1,0 +1,44 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+<div class="dash-layout">
+  <%- include('partials/sidebar-user') %>
+  <div class="dash-content">
+    <h1 style="font-size:1.5rem;margin-bottom:1rem;">API Usage</h1>
+    <div class="card mb-2" style="max-width:480px;">
+      <% if (user.unlimited || user.role === 'admin') { %>
+        <div style="font-size:2rem;font-weight:800;">∞ Unlimited</div>
+        <p class="text-muted">Admin accounts have no daily limit.</p>
+      <% } else { %>
+        <% const pct = Math.min(100, Math.round((user.usedToday / user.dailyLimit) * 100)); %>
+        <div style="font-size:1.75rem;font-weight:800;"><%= user.usedToday %> / <%= user.dailyLimit %></div>
+        <div class="usage-bar"><div class="usage-fill <%= pct>=90?'danger':pct>=70?'warning':'' %>" style="width:<%= pct %>%"></div></div>
+        <div class="grid-2 mt-2">
+          <div><div class="text-muted text-xs">Used</div><strong><%= user.usedToday %></strong></div>
+          <div><div class="text-muted text-xs">Remaining</div><strong><%= Math.max(0, user.dailyLimit - user.usedToday) %></strong></div>
+          <div><div class="text-muted text-xs">Daily Limit</div><strong><%= user.dailyLimit %></strong></div>
+          <div><div class="text-muted text-xs">Reset</div><strong>Midnight UTC</strong></div>
+        </div>
+      <% } %>
+    </div>
+    <div class="card">
+      <h3 style="font-size:1rem;margin-bottom:1rem;">Today's Requests (<%= (logsToday||[]).length %>)</h3>
+      <% if (logsToday && logsToday.length) { %>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Endpoint</th><th>Status</th><th>Time</th><th>When</th></tr></thead>
+          <tbody>
+            <% logsToday.forEach(function(l){ %>
+              <tr>
+                <td class="mono text-sm"><%= l.endpoint %></td>
+                <td><span class="badge <%= l.success?'badge-get':'badge-delete' %>"><%= l.statusCode %></span></td>
+                <td><%= l.responseTime %>ms</td>
+                <td class="text-muted text-sm"><%= new Date(l.createdAt).toLocaleTimeString() %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table></div>
+      <% } else { %><p class="text-muted">No requests today.</p><% } %>
+    </div>
+  </div>
+</div>
+<script src="/js/main.js"></script>
+</div></body></html>
