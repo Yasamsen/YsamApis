@@ -1,0 +1,62 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<main class="section">
+  <div class="container">
+    <div class="section-header">
+      <h1 class="section-title">User Management</h1>
+      <a href="/admin" class="btn btn-ghost btn-sm">Back to Admin</a>
+    </div>
+    <form class="filters-bar" method="GET">
+      <div class="search-box" style="flex:1;">
+        <input type="search" name="q" value="<%= typeof query !== 'undefined' ? query : '' %>" placeholder="Search name or IP..." class="form-input">
+      </div>
+      <button class="btn btn-secondary" type="submit">Search</button>
+    </form>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>User</th><th>IP</th><th>Role</th><th>Status</th><th>Usage</th><th>Key</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            <% (users || []).forEach(function(u) { %>
+              <tr>
+                <td>
+                  <div class="flex items-center" style="gap:0.5rem;">
+                    <img src="<%= u.avatar || 'https://ui-avatars.com/api/?name=U&background=6366f1&color=fff&size=32' %>" width="28" height="28" style="border-radius:50%;" alt="">
+                    <div class="text-sm" style="font-weight:600;"><%= u.name %></div>
+                  </div>
+                </td>
+                <td class="mono text-xs"><%= u.ip %></td>
+                <td><span class="badge badge-cat"><%= u.role %></span></td>
+                <td><span class="status-dot <%= u.status === 'active' ? 'online' : 'offline' %>"></span> <%= u.status %></td>
+                <td><%= u.usedToday %> / <%= u.unlimited ? '∞' : u.dailyLimit %></td>
+                <td class="mono text-xs"><%= (u.apiKey || '').slice(0, 12) %>...</td>
+                <td>
+                  <form method="POST" action="/admin/users/<%= u._id %>" style="display:inline;">
+                    <input type="hidden" name="action" value="regenerate-key">
+                    <button class="btn btn-ghost btn-sm" type="submit">Regen Key</button>
+                  </form>
+                  <% if (u.status === 'active') { %>
+                    <form method="POST" action="/admin/users/<%= u._id %>" style="display:inline;">
+                      <input type="hidden" name="status" value="disabled">
+                      <button class="btn btn-ghost btn-sm text-danger" type="submit">Disable</button>
+                    </form>
+                  <% } else { %>
+                    <form method="POST" action="/admin/users/<%= u._id %>" style="display:inline;">
+                      <input type="hidden" name="status" value="active">
+                      <button class="btn btn-ghost btn-sm" type="submit">Enable</button>
+                    </form>
+                  <% } %>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+<%- include('../partials/footer') %>
+<script src="/js/main.js"></script>
+</div></body></html>
