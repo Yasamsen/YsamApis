@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Storage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/storage.css">
+</head>
+<body>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1>MY STORAGE</h1>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-action="home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Home
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="nav-item" id="logoutBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Logout
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="searchInput" placeholder="Search files and folders...">
+        </div>
+        <div class="topbar-actions">
+          <span id="userLabel" style="font-size:0.85rem;color:var(--text-secondary)"></span>
+        </div>
+      </header>
+
+      <div class="content-area">
+        <nav class="breadcrumb" id="breadcrumb">
+          <a data-folder="root">Home</a>
+        </nav>
+
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <div class="view-toggle">
+              <button class="active" data-view="grid" title="Grid view">Grid</button>
+              <button data-view="list" title="List view">List</button>
+            </div>
+          </div>
+          <div class="toolbar-right">
+            <select class="sort-select" id="sortSelect">
+              <option value="name-asc">Name A–Z</option>
+              <option value="name-desc">Name Z–A</option>
+              <option value="size-desc">Size ↓</option>
+              <option value="size-asc">Size ↑</option>
+              <option value="date-desc">Newest</option>
+              <option value="date-asc">Oldest</option>
+              <option value="type-asc">Type</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="fileContainer" class="file-grid"></div>
+        <div id="emptyState" class="empty-state hidden">
+          <div class="icon">📁</div>
+          <p>This folder is empty</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="active" data-action="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      Home
+    </button>
+    <button data-action="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Search
+    </button>
+    <button id="logoutBtnMobile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Logout
+    </button>
+  </nav>
+
+  <!-- Preview Modal -->
+  <div class="modal-overlay" id="previewModal">
+    <div class="modal" style="max-width:90vw;max-height:90vh;width:auto">
+      <div class="modal-header">
+        <h2 id="previewTitle">Preview</h2>
+        <button class="modal-close" id="previewClose">&times;</button>
+      </div>
+      <div class="modal-body" id="previewBody" style="text-align:center;min-height:200px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="previewDownload">Download</button>
+        <button class="btn btn-ghost" id="previewCloseBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="/js/storage.js"></script>
+</body>
+</html>
