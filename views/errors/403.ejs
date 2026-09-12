@@ -1,0 +1,13 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<main class="error-page">
+  <div>
+    <div class="error-code">403</div>
+    <h2>Forbidden</h2>
+    <p><%= typeof message !== 'undefined' ? message : 'You do not have permission to access this page.' %></p>
+    <a href="/" class="btn btn-primary">Back to Home</a>
+  </div>
+</main>
+<%- include('../partials/footer') %>
+<script src="/js/main.js"></script>
+</div></body></html>
