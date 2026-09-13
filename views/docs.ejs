@@ -1,0 +1,39 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+
+<main class="section">
+  <div class="container">
+    <h1 class="section-title" style="margin-bottom: 0.5rem;">Documentation</h1>
+    <p class="section-desc mb-2">Auto-generated docs from endpoint metadata. Add a new file in /api and it appears here.</p>
+
+    <% 
+      const byCat = {};
+      (endpoints || []).forEach(ep => {
+        if (!byCat[ep.category]) byCat[ep.category] = [];
+        byCat[ep.category].push(ep);
+      });
+    %>
+
+    <% Object.keys(byCat).sort().forEach(function(cat) { %>
+      <h2 style="font-size: 1.15rem; margin: 2rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);"><%= cat %></h2>
+      <div class="api-grid">
+        <% byCat[cat].forEach(function(ep) { %>
+          <a href="/docs/<%= ep.category.toLowerCase() %>/<%= ep.id.split('/')[1] %>" class="api-card">
+            <div class="api-card-header">
+              <span class="api-card-title"><%= ep.name %></span>
+              <span class="badge badge-<%= ep.method.toLowerCase() %>"><%= ep.method %></span>
+            </div>
+            <p class="api-card-desc"><%= ep.description %></p>
+            <div class="api-card-path"><%= ep.endpoint %></div>
+          </a>
+        <% }) %>
+      </div>
+    <% }) %>
+  </div>
+</main>
+
+<%- include('partials/footer') %>
+<script src="/js/main.js"></script>
+</div>
+</body>
+</html>
