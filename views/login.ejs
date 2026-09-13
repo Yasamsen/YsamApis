@@ -1,0 +1,26 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+
+<main class="login-page">
+  <div class="login-card">
+    <div style="margin-bottom: 1.5rem;">
+      <span class="brand-icon" style="font-size: 2.5rem;">⚡</span>
+    </div>
+    <h1>Akses Otomatis</h1>
+    <p class="sub">SamApi mengenali perangkatmu lewat IP. Tidak perlu login Google.</p>
+
+    <a href="/auth/ip" class="btn btn-primary btn-lg btn-block" style="margin-top: 0.5rem;">
+      Lanjut ke Dashboard
+    </a>
+
+    <p class="text-muted text-sm" style="margin-top: 1.75rem;">
+      API key dibuat otomatis berdasarkan IP kamu.<br>
+      Limit harian: 10 request (admin unlimited).
+    </p>
+  </div>
+</main>
+
+<script src="/js/main.js"></script>
+</div>
+</body>
+</html>
