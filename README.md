@@ -1,4 +1,4 @@
-# SamApis — Modern API Platform
+# SamApi — Modern API Platform
 
 Professional SaaS-style API platform with auto-discovered endpoints, IP-based auth, API keys, daily limits, and admin dashboard.
 
