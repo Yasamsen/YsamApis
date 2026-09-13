@@ -1,0 +1,96 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="status-dot online"></span>
+          <%= stats.online %> APIs online · <%= stats.total %> total
+        </div>
+        <h1>Build. Explore. <span class="highlight">Integrate.</span></h1>
+        <p class="hero-sub">
+          Powerful APIs for developers.<br>
+          Explore fast, reliable and easy-to-use APIs from one powerful platform.
+        </p>
+        <div class="hero-cta">
+          <a href="/explorer" class="btn btn-primary btn-lg">Explore APIs</a>
+          <a href="/docs" class="btn btn-secondary btn-lg">Documentation</a>
+        </div>
+
+        <div class="stats-bar">
+          <div class="stat-item">
+            <div class="stat-value"><%= stats.total %></div>
+            <div class="stat-label">Total APIs</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value"><%= stats.online %></div>
+            <div class="stat-label">Online</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value"><%= stats.categories %></div>
+            <div class="stat-label">Categories</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value"><%= stats.maintenance || 0 %></div>
+            <div class="stat-label">Maintenance</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Featured APIs</h2>
+          <p class="section-desc">Most popular endpoints ready to integrate</p>
+        </div>
+        <a href="/explorer" class="btn btn-secondary btn-sm">View all →</a>
+      </div>
+
+      <div class="api-grid">
+        <% (featured || []).forEach(function(ep) { %>
+          <a href="/docs/<%= ep.category.toLowerCase() %>/<%= ep.id.split('/')[1] %>" class="api-card card-featured">
+            <div class="api-card-header">
+              <span class="api-card-title"><%= ep.name %></span>
+              <span class="badge badge-<%= ep.method.toLowerCase() %>"><%= ep.method %></span>
+            </div>
+            <p class="api-card-desc"><%= ep.description %></p>
+            <div class="api-card-meta">
+              <span class="badge badge-cat"><%= ep.category %></span>
+              <span class="status-dot <%= ep.status %>"></span>
+              <span class="text-xs text-muted"><%= ep.status %></span>
+            </div>
+            <div class="api-card-path"><%= ep.endpoint %></div>
+          </a>
+        <% }) %>
+        <% if (!featured || featured.length === 0) { %>
+          <p class="text-muted">No featured APIs yet. Add endpoints to the /api folder.</p>
+        <% } %>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--bg-elevated); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="container" style="text-align: center; max-width: 640px;">
+      <h2 class="section-title">Ready to start building?</h2>
+      <p class="section-desc" style="margin-bottom: 1.5rem;">
+        Akses otomatis lewat IP. API key dibuat langsung, tanpa login Google.
+      </p>
+      <% if (typeof user !== 'undefined' && user) { %>
+        <a href="/user/dashboard" class="btn btn-primary btn-lg">Go to Dashboard</a>
+      <% } else { %>
+        <a href="/login" class="btn btn-primary btn-lg">Buka Dashboard</a>
+      <% } %>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>
+<script src="/js/main.js"></script>
+</div>
+</body>
+</html>
