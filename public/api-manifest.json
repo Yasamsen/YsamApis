@@ -1,0 +1,10 @@
+{
+  "generatedAt": "build-time",
+  "routes": [
+    "/api/downloader",
+    "/api/downloader/instagram",
+    "/api/downloader/tiktok",
+    "/api/downloader/youtube",
+    "/api/search/example"
+  ]
+}
