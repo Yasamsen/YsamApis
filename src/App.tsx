@@ -1,19 +1,30 @@
-import { useEffect } from 'react';
-import { ThemeProvider } from '@/context/ThemeContext';
-import { RouterProvider, useRouter } from '@/context/RouterContext';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import Home from '@/pages/Home';
-import Docs from '@/pages/Docs';
-import { NotFound, ServerError } from '@/pages/Errors';
+import { Navbar } from '@/components/Navbar';
+import { Hero } from '@/components/Hero';
+import { Marquee } from '@/components/Marquee';
+import { Features } from '@/components/Features';
+import { ApiShowcase } from '@/components/ApiShowcase';
+import { Stats } from '@/components/Stats';
+import { Pricing } from '@/components/Pricing';
+import { CTA } from '@/components/CTA';
+import { Footer } from '@/components/Footer';
 
-function AppContent() {
-  const { path } = useRouter();
-  useEffect(() => { document.title = path.startsWith('/docs') ? 'Documentation — SamApi' : path === '/500' ? 'Server Error — SamApi' : path === '/404' ? 'Not Found — SamApi' : 'SamApi — Simple, powerful APIs'; }, [path]);
-  const isError = path === '/404' || path === '/500';
-  return <div className="min-h-screen bg-white text-slate-900 transition-colors dark:bg-slate-950 dark:text-white"><Navbar />{path === '/' ? <Home /> : path === '/docs' || path.startsWith('/docs/') ? <Docs /> : path === '/500' ? <ServerError /> : <NotFound />}{!isError && <Footer />}</div>;
+function App() {
+  return (
+    <div className="relative min-h-screen bg-ink-950 text-ink-50">
+      <div className="noise-overlay" />
+      <Navbar />
+      <main className="relative z-10">
+        <Hero />
+        <Marquee />
+        <Features />
+        <ApiShowcase />
+        <Stats />
+        <Pricing />
+        <CTA />
+      </main>
+      <Footer />
+    </div>
+  );
 }
-
-function App() { return <ThemeProvider><RouterProvider><AppContent /></RouterProvider></ThemeProvider>; }
 
 export default App;
