@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1020">
+  <title>CodeVault — Code Library</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/"><span class="brand-icon">⌘</span><span>Code<span class="accent">Vault</span></span></a>
+  <div class="top-actions"><button id="ownerBtn" class="button ghost">Owner Login</button></div>
+</header>
+<main class="container">
+  <section class="hero">
+    <div class="eyebrow"><span class="pulse"></span> CODE LIBRARY</div>
+    <h1>Simpan kode.<br><span class="gradient">Bagikan dengan mudah.</span></h1>
+    <p class="sub">Kumpulan snippet dan source code yang bisa dilihat, disalin, dan diunduh.</p>
+    <div class="search-wrap"><span>⌕</span><input id="search" placeholder="Cari nama kode..." autocomplete="off"></div>
+  </section>
+  <section class="section-head"><div><h2>Library</h2><p id="count">Memuat kode...</p></div><span class="tag">PUBLIC VIEW</span></section>
+  <section id="codeList" class="code-grid"><div class="empty">Memuat library...</div></section>
+</main>
+<footer>CodeVault <span>·</span> Simple code sharing</footer>
+
+<div id="loginModal" class="modal hidden">
+ <div class="modal-card"><button class="close" data-close="loginModal">×</button><div class="eyebrow">OWNER ACCESS</div><h2>Masuk sebagai owner</h2><p class="muted">Halaman pengelolaan hanya untuk pemilik.</p>
+ <form id="loginForm"><label>Password admin</label><input id="adminPassword" type="password" required autocomplete="current-password" placeholder="Masukkan password"><button class="button primary full">Login</button><p id="loginError" class="error"></p></form></div>
+</div>
+<div id="adminModal" class="modal hidden">
+ <div class="modal-card wide"><button class="close" data-close="adminModal">×</button><div class="eyebrow">OWNER DASHBOARD</div><h2>Kelola kode</h2>
+ <form id="codeForm" class="form-grid">
+  <input id="editId" type="hidden">
+  <div><label>Judul kode</label><input id="title" maxlength="120" required placeholder="Contoh: Auto Hotspot"></div>
+  <div><label>Bahasa</label><input id="language" maxlength="40" placeholder="javascript, python, bash..."></div>
+  <div class="span-2"><label>Deskripsi (opsional)</label><input id="description" maxlength="500" placeholder="Keterangan singkat"></div>
+  <div class="span-2"><label>Isi kode</label><textarea id="code" required spellcheck="false" placeholder="Tempel source code di sini..."></textarea></div>
+  <div class="span-2 form-actions"><button class="button primary" id="saveCode">Simpan kode</button><button type="button" class="button ghost" id="resetForm">Bersihkan</button><button type="button" class="button danger" id="logoutBtn">Logout</button></div>
+  <p id="formMessage" class="span-2 muted"></p>
+ </form>
+ <div class="admin-list"><h3>Kode tersimpan</h3><div id="adminList"></div></div>
+ </div>
+</div>
+<script src="/app.js"></script>
+</body></html>
