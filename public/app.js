@@ -45,7 +45,7 @@ function close(id){$(id).classList.add("hidden")}
 $("search").addEventListener("input",renderList);
 $("ownerBtn").onclick=async()=>{try{const me=await api("auth/me");if(me.owner){open("adminModal");renderAdmin();}else open("loginModal");}catch{open("loginModal");}};
 document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>close(b.dataset.close));
-$("loginForm").onsubmit=async e=>{e.preventDefault();$("loginError").textContent="";try{await api("auth/login",{method:"POST",body:JSON.stringify({password:$("adminPassword").value})});$("adminPassword").value="";close("loginModal");open("adminModal");renderAdmin();}catch(err){$("loginError").textContent=err.message;}};
+$("loginForm").onsubmit=async e=>{e.preventDefault();$("loginError").textContent="";try{await api("login",{method:"POST",body:JSON.stringify({password:$("adminPassword").value})});$("adminPassword").value="";close("loginModal");open("adminModal");renderAdmin();}catch(err){$("loginError").textContent=err.message;}};
 function reset(){ $("codeForm").reset();$("editId").value="";$("formMessage").textContent="";$("saveCode").textContent="Simpan kode";}
 $("resetForm").onclick=reset;
 $("logoutBtn").onclick=async()=>{await api("auth/logout",{method:"POST"});close("adminModal");reset();};

@@ -33,3 +33,7 @@ Setelah mengganti file di GitHub dan deploy ulang:
 2. Pastikan `SESSION_SECRET` minimal 32 karakter.
 3. Redeploy dengan **Clear Build Cache** bila browser masih memuat JavaScript lama.
 4. Buka ulang situs dan coba login.
+
+## Perbaikan endpoint login (rilis 1.0.2)
+Login sekarang memakai endpoint khusus `POST /api/login` melalui file `api/login.js`, tidak lagi memakai jalur `/api/auth/login`.
+Setelah mengunggah seluruh isi ZIP ini ke repository, lakukan deploy ulang di Vercel. Pastikan `ADMIN_PASSWORD` dan `SESSION_SECRET` tetap tersedia pada Environment Variables untuk Production.
