@@ -1,14 +1,8 @@
 {
   "version": 2,
-  "functions": {
-    "api/[...slug].js": {
-      "maxDuration": 10
-    },
-    "api/login.js": {
-      "maxDuration": 10
-    },
-    "api/code.js": {
-      "maxDuration": 10
-    }
-  }
+  "functions": { "api/*.js": { "maxDuration": 10 } },
+  "rewrites": [
+    { "source": "/raw/:id", "destination": "/api/raw?id=:id" },
+    { "source": "/admin", "destination": "/admin.html" }
+  ]
 }
