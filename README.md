@@ -23,3 +23,13 @@ Stack: HTML/CSS/JS biasa, Node.js CommonJS, MongoDB Atlas, Vercel Functions.
 - Gunakan HTTPS (Vercel sudah menyediakannya).
 - Pengunjung tidak bisa menambah/mengubah/menghapus kode melalui UI maupun API tanpa sesi owner.
 - Untuk mengembangkan aplikasi lokal, pasang Vercel CLI lalu jalankan `npm install` dan `vercel dev`.
+
+
+## Perbaikan login (rilis 1.0.1)
+Versi ini memperbaiki pembacaan JSON request pada Vercel (mendukung `req.body` yang sudah diparse) dan membuat pesan error API menampilkan status HTTP serta respons server agar masalah login tidak lagi tersembunyi sebagai "Permintaan gagal".
+
+Setelah mengganti file di GitHub dan deploy ulang:
+1. Pastikan `ADMIN_PASSWORD` terisi.
+2. Pastikan `SESSION_SECRET` minimal 32 karakter.
+3. Redeploy dengan **Clear Build Cache** bila browser masih memuat JavaScript lama.
+4. Buka ulang situs dan coba login.

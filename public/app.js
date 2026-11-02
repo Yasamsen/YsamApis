@@ -1,9 +1,34 @@
 const $ = id => document.getElementById(id);
 let codes = [];
-async function api(path, options={}) {
-  const response = await fetch("/api/" + path, { credentials:"same-origin", ...options, headers: { "Content-Type":"application/json", ...(options.headers||{}) }});
-  const data = await response.json().catch(()=>({}));
-  if (!response.ok) throw new Error(data.error || "Permintaan gagal");
+async function api(path, options = {}) {
+  let response;
+  try {
+    response = await fetch("/api/" + path, {
+      credentials: "same-origin",
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...(options.headers || {})
+      }
+    });
+  } catch (error) {
+    throw new Error("Tidak dapat menghubungi API: " + error.message);
+  }
+
+  const raw = await response.text();
+  let data = {};
+  try {
+    data = raw ? JSON.parse(raw) : {};
+  } catch {
+    throw new Error(
+      `API mengirim respons bukan JSON (HTTP ${response.status}). ` +
+      raw.slice(0, 180)
+    );
+  }
+
+  if (!response.ok) {
+    throw new Error(data.error || `API gagal (HTTP ${response.status})`);
+  }
   return data;
 }
 function esc(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}

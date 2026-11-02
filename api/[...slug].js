@@ -19,10 +19,18 @@ function send(res, status, data) {
   res.end(JSON.stringify(data));
 }
 function parseCookies(req) {
-  return Object.fromEntries((req.headers.cookie || "").split(";").map(v => v.trim()).filter(Boolean).map(v => {
-    const i = v.indexOf("=");
-    return [v.slice(0, i), decodeURIComponent(v.slice(i + 1))];
-  }));
+  const cookies = {};
+  for (const item of (req.headers.cookie || "").split(";")) {
+    const value = item.trim();
+    if (!value) continue;
+    const i = value.indexOf("=");
+    if (i < 0) continue;
+    const key = value.slice(0, i);
+    const raw = value.slice(i + 1);
+    try { cookies[key] = decodeURIComponent(raw); }
+    catch { cookies[key] = raw; }
+  }
+  return cookies;
 }
 function sign(value) {
   return crypto.createHmac("sha256", process.env.SESSION_SECRET || "").update(value).digest("hex");
@@ -47,12 +55,24 @@ function setSession(res) {
 function clearSession(res) {
   res.setHeader("Set-Cookie", "cv_session=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0");
 }
-function readBody(req) {
+async function readBody(req) {
+  // Vercel may provide an already-parsed body. Prefer it when available.
+  if (req.body !== undefined && req.body !== null) {
+    if (typeof req.body === "object") return req.body;
+    if (typeof req.body === "string") {
+      try { return req.body ? JSON.parse(req.body) : {}; }
+      catch { throw new Error("Format JSON tidak valid"); }
+    }
+  }
+
   return new Promise((resolve, reject) => {
     let data = "";
     req.on("data", chunk => {
-      data += chunk;
-      if (data.length > 1024 * 1024) reject(new Error("Ukuran request terlalu besar"));
+      data += chunk.toString();
+      if (data.length > 1024 * 1024) {
+        reject(new Error("Ukuran request terlalu besar"));
+        req.destroy();
+      }
     });
     req.on("end", () => {
       try { resolve(data ? JSON.parse(data) : {}); }
