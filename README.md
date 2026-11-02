@@ -37,3 +37,20 @@ Setelah mengganti file di GitHub dan deploy ulang:
 ## Perbaikan endpoint login (rilis 1.0.2)
 Login sekarang memakai endpoint khusus `POST /api/login` melalui file `api/login.js`, tidak lagi memakai jalur `/api/auth/login`.
 Setelah mengunggah seluruh isi ZIP ini ke repository, lakukan deploy ulang di Vercel. Pastikan `ADMIN_PASSWORD` dan `SESSION_SECRET` tetap tersedia pada Environment Variables untuk Production.
+
+## Perbaikan halaman detail (rilis 1.0.3)
+Ditambahkan route eksplisit `api/codes/[id].js` untuk mengambil, mengedit, dan menghapus satu kode berdasarkan MongoDB ObjectId atau slug. `public/view.js` juga sekarang memeriksa respons sebelum parsing JSON dan menampilkan pesan HTTP yang lebih jelas.
+Unggah seluruh isi ZIP ke repository GitHub (timpa file lama), pastikan `api/codes/[id].js` ikut terunggah, lalu deploy ulang.
+
+## CodeVault Full Fix v1.0.4
+Paket ini menggabungkan perbaikan login dan halaman detail. Endpoint detail publik menggunakan `GET /api/code?id=...` melalui file eksplisit `api/code.js`, sehingga tidak bergantung pada route dinamis `/api/codes/[id]`. Daftar, tambah, edit, hapus, autentikasi, tampilan library, dan tampilan detail tetap disertakan.
+
+### Deploy
+1. Ekstrak ZIP.
+2. Ganti seluruh isi repository CodeVault dengan seluruh isi folder hasil ekstrak. Jangan letakkan folder pembungkus ZIP sebagai subfolder di repository; `api/`, `public/`, `package.json`, dan `vercel.json` harus berada di root repository.
+3. Commit dan push semua file.
+4. Di Vercel, pastikan Production branch yang benar terhubung, lalu deploy ulang.
+5. Jangan hapus Environment Variables `ADMIN_PASSWORD`, `SESSION_SECRET`, `MONGODB_URI`, dan `MONGODB_DB`.
+6. Tes `/api/codes` (harus JSON array), lalu buka detail kode.
+
+Link detail yang lama tetap dapat digunakan karena nilai `id` atau `slug` dibaca dari query string.
